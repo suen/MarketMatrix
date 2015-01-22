@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.daubajee.marketmatrix.agent.behaviour.BuyerBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.ConsumingBehaviour;
+import com.daubajee.marketmatrix.agent.behaviour.DiscoverMarketAgentBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.PostManBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.SatisfactionCheckBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.SellerBehaviour;
@@ -46,6 +47,9 @@ public class MarketAgent extends Agent {
 		// behaviour that checks if agent is satisfied
 		addBehaviour(new SatisfactionCheckBehaviour(this));
 
+		// to check for new MarketAgent in the directory
+		addBehaviour(new DiscoverMarketAgentBehaviour(this));
+		
 		// behaviour that deals with sales of products
 		addBehaviour(new SellerBehaviour(this));
 
