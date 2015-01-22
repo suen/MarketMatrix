@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="MarketMatrix">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="MarketMatrix.classpath">
+        <pathelement location="bin"/>
+       <!-- <pathelement location="lib/jfxrt.jar"/> -->
+       <!-- <pathelement location="lib/j2ee.jar"/> -->
+        <pathelement location="lib/jade-4.2.jar"/>
+      <!--  <pathelement location="lib/javaee.jar"/> -->
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="MarketMatrix.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="MarketMatrix_JADE">
+        <java classname="jade.Boot" failonerror="true" fork="yes">
+            <arg line="-host localhost -agents agentStarter:com.daubajee.marketmatrix.agent.MarketAgentCreator"/>
+            <classpath refid="MarketMatrix.classpath"/>
+        </java>
+    </target>
+    <target name="JavaFXVisualisation">
+        <java classname="com.daubajee.marketmatrix.gui.JavaFXVisualisation" failonerror="true" fork="yes">
+            <classpath refid="MarketMatrix.classpath"/>
+        </java>
+    </target>
+</project>
