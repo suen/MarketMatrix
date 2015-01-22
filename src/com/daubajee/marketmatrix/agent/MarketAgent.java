@@ -19,7 +19,6 @@ import com.daubajee.marketmatrix.gui.JavaFXVisualisation;
 
 public class MarketAgent extends Agent {
 
-	private MarketAgentBehaviourModel behaviourModel;
 	private MarketAgentAttribute attribute = new MarketAgentAttribute();
 	private JavaFXGUIController gui;
 	@Override
