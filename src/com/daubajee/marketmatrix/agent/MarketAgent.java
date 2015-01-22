@@ -1,20 +1,25 @@
 package com.daubajee.marketmatrix.agent;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.daubajee.marketmatrix.gui.JavaFXGUIController;
-import com.daubajee.marketmatrix.gui.JavaFXVisualisation;
-
 import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.daubajee.marketmatrix.agent.behaviour.BuyerBehaviour;
+import com.daubajee.marketmatrix.agent.behaviour.ConsumingBehaviour;
+import com.daubajee.marketmatrix.agent.behaviour.PostManBehaviour;
+import com.daubajee.marketmatrix.agent.behaviour.SatisfactionCheckBehaviour;
+import com.daubajee.marketmatrix.agent.behaviour.SellerBehaviour;
+import com.daubajee.marketmatrix.gui.JavaFXGUIController;
+import com.daubajee.marketmatrix.gui.JavaFXVisualisation;
+
 public class MarketAgent extends Agent {
 
+	private MarketAgentBehaviourModel behaviourModel;
 	private MarketAgentAttribute attribute = new MarketAgentAttribute();
 	private JavaFXGUIController gui;
 	@Override
@@ -36,13 +41,23 @@ public class MarketAgent extends Agent {
 		//register agent with the directory service
 		registerWithDFService();
 		
-		// add a behavior for dealing with incoming message;
+		// behaviour that consumes the resources that the agent feeds on
+		addBehaviour(new ConsumingBehaviour(this));
 		
-		// add a behavior for selling behavior
+		// behaviour that checks if agent is satisfied
+		addBehaviour(new SatisfactionCheckBehaviour(this));
+
+		// behaviour that deals with sales of products
+		addBehaviour(new SellerBehaviour(this));
+
+		// behaviour that deals with buying of products
+		addBehaviour(new BuyerBehaviour(this));
+
+		// behaviour for incoming messages
+		addBehaviour(new PostManBehaviour(this));
 		
-		// add a behavior for buying behavior
 		
-		addBehaviour(new TickerBehaviour(this, 100) {
+/*		addBehaviour(new TickerBehaviour(this, 1000) {
 			@Override
 			protected void onTick() {
 				MarketAgent marketAgent = (MarketAgent) myAgent;
@@ -51,13 +66,12 @@ public class MarketAgent extends Agent {
 				attr.setSatisfaction(sat);
 				//System.out.println(sat);
 				gui.updateAgents(marketAgent);
-				gui.addMsg(marketAgent.getLocalName() + " satisfaction: " + String.valueOf(sat));
+				//gui.addMsg(marketAgent.getLocalName() + " satisfaction: " + String.valueOf(sat));
 			}
 		});
-
+*/
 		//a gui notification on successful initialisation
-		gui.addMsg(this.getLocalName() + " intialised successfully");
-
+		gui.addMsg("Agent: '" + this.getLocalName() + "' intialised successfully");
 	}
 
 	private boolean parseParameters(){
@@ -113,6 +127,9 @@ public class MarketAgent extends Agent {
 		this.attribute = attribute;
 	}
 	
+	public void printMsg(String msg){
+		gui.addMsg("[" + this.getLocalName() + "] " + msg);
+	}
 	
 	
 }
