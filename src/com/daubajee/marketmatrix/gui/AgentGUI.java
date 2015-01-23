@@ -77,9 +77,9 @@ public class AgentGUI extends Pane {
 		money = String.valueOf(attr.getMoney());
 		satisfaction = String.valueOf(attr.getSatisfaction());
 		
-		consumesLabel.setText("Consumes: " + consumes + " - " + consumesRate+ " / TU");
+		consumesLabel.setText("Consumes " + consumes + " : " + consumesRate+ " / TU");
 		consumeStockLabel.setText("Consume Stock: " + consumeStock+" / " + consumeStockMaximum);
-		producesLabel.setText("Produces: " + produces + " - " + produceRate + " / TU");
+		producesLabel.setText("Produces " + produces + " : " + produceRate + " / TU");
 		produceStockLabel.setText("Produce Stock: " + produceStock+" / " + produceStockMaximum);
 		priceProductLabel.setText("Price of product: "+ price +" MU");
 		moneyLabel.setText("Money : "+money + " MU");

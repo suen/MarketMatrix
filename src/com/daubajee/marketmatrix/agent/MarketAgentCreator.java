@@ -33,7 +33,7 @@ public class MarketAgentCreator extends Agent {
 				+ "price=6,money=50,satisfaction=50",
 			"produces=Rice,produceRate=1,consumes=Potatoes,consumeRate=10,"
 				+ "consumeStock=32,consumeStockCapacity=100,produceStock=32,produceStockCapacity=100,"
-				+ "price=2,money=40,satisfaction=50"
+				+ "price=2,money=0,satisfaction=50"
 			};
 	
 	@Override
