@@ -38,7 +38,7 @@
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target name="MarketMatrix_JADE">
+    <target depends="build" name="MarketMatrix_JADE">
         <java classname="jade.Boot" failonerror="true" fork="yes">
             <arg line="-host localhost -agents agentStarter:com.daubajee.marketmatrix.agent.MarketAgentCreator"/>
             <classpath refid="MarketMatrix.classpath"/>
