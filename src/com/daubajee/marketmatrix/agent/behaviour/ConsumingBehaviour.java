@@ -9,7 +9,6 @@ public class ConsumingBehaviour extends Behaviour {
 	
 	private MarketAgent marketAgent;
 	private long lastConsumption;
-	private final long timeUnit = 5000L;
 
 	public ConsumingBehaviour(MarketAgent marketAgent) {
 		this.marketAgent = marketAgent;
@@ -26,10 +25,10 @@ public class ConsumingBehaviour extends Behaviour {
 
 		// deciding whether or not it is time to consume product, 
 		// if last consumption was less than a timeUnit ago, return
-		if (diff < timeUnit) {
+		if (diff < MarketAgent.TIME_UNIT) {
 			return;
 		}
-		lastConsumption += timeUnit;
+		lastConsumption += MarketAgent.TIME_UNIT;
 
 		int productStock = agentAttr.getConsumeProductStock();
 		double quantityToConsume = agentAttr.getConsumeRate();

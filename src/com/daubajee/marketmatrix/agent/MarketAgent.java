@@ -26,6 +26,7 @@ public class MarketAgent extends Agent {
 
 	private MarketAgentAttribute attribute = new MarketAgentAttribute();
 	private JavaFXGUIController gui;
+	public static final long TIME_UNIT = 5000L;
 	
 	private List<AID> otherAgents = new ArrayList<AID>();
 	
