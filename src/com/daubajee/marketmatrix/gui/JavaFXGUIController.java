@@ -29,7 +29,7 @@ public class JavaFXGUIController {
 		return container;
 	}
 	
-	public void registerAgent(MarketAgent agent){
+	public void registerAgent(final MarketAgent agent){
 		
 		Platform.runLater(new Runnable() {
 			@Override
@@ -44,7 +44,7 @@ public class JavaFXGUIController {
 	}
 	
 	public void updateAgents(MarketAgent agent){
-		AgentGUI agui = registeredAgents.get(agent);
+		final AgentGUI agui = registeredAgents.get(agent);
 		Platform.runLater(new Runnable() {
 			
 			@Override
@@ -54,7 +54,7 @@ public class JavaFXGUIController {
 		});
 	}
 	
-	public void addMsg(String msg){
+	public void addMsg(final String msg){
 		Platform.runLater(new Runnable() {
 			
 			@Override

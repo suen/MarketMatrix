@@ -14,7 +14,7 @@ public class MarketAgentAttribute {
 	private int consumeProductStockCapacity = 0;
 	private int workFreeCounter = 0;
 	private int hungerCounter = 0;
-	private int satisfaction = 0;
+	private double satisfaction = 0;
 	private double money = 0;
 	private double price = 0;
 	
@@ -82,11 +82,11 @@ public class MarketAgentAttribute {
 		this.consumeProductStockCapacity = consumeProductStockCapacity;
 	}
 
-	public int getSatisfaction() {
+	public double getSatisfaction() {
 		return satisfaction;
 	}
 
-	public void setSatisfaction(int satisfaction) {
+	public void setSatisfaction(double satisfaction) {
 		this.satisfaction = satisfaction;
 	}
 
