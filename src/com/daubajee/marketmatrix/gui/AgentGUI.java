@@ -67,6 +67,8 @@ public class AgentGUI extends Pane {
 	public void updateLabels(){
 		consumes = attr.getConsumes();
 		consumesRate = String.valueOf(attr.getConsumeRate());
+		consumeStock = String.valueOf(attr.getConsumeProductStock());
+		consumeStockMaximum = String.valueOf(attr.getConsumeProductStockCapacity());
 		produces = attr.getProduces();
 		produceRate = String.valueOf(attr.getProduceRate());
 		price = String.valueOf(attr.getPrice());
