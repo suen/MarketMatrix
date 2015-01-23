@@ -16,6 +16,7 @@ import com.daubajee.marketmatrix.agent.behaviour.BuyerBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.ConsumingBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.DiscoverMarketAgentBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.PostManBehaviour;
+import com.daubajee.marketmatrix.agent.behaviour.ProductionBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.SatisfactionCheckBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.SellerBehaviour;
 import com.daubajee.marketmatrix.gui.JavaFXGUIController;
@@ -49,6 +50,9 @@ public class MarketAgent extends Agent {
 		
 		// behaviour that consumes the resources that the agent feeds on
 		addBehaviour(new ConsumingBehaviour(this));
+
+		// produces the resources that the agent trades
+		addBehaviour(new ProductionBehaviour(this));
 		
 		// behaviour that checks if agent is satisfied
 		addBehaviour(new SatisfactionCheckBehaviour(this));
