@@ -17,7 +17,7 @@ public class PostManBehaviour extends Behaviour {
 
 	@Override
 	public boolean done() {
-		return false;
+		return true;
 	}
 
 }

@@ -17,7 +17,7 @@ public class SellerBehaviour extends Behaviour {
 
 	@Override
 	public boolean done() {
-		return false;
+		return true;
 	}
 
 }

@@ -17,7 +17,7 @@ public class SatisfactionCheckBehaviour extends Behaviour {
 
 	@Override
 	public boolean done() {
-		return false;
+		return true;
 	}
 
 }
