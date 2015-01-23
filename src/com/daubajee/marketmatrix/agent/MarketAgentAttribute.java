@@ -12,6 +12,8 @@ public class MarketAgentAttribute {
 	private int produceProductStockCapacity = 0;
 	private int consumeProductStock = 0;
 	private int consumeProductStockCapacity = 0;
+	private int workFreeCounter = 0;
+	private int hungerCounter = 0;
 	private int satisfaction = 0;
 	private double money = 0;
 	private double price = 0;
@@ -102,6 +104,22 @@ public class MarketAgentAttribute {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public int getWorkFreeCounter() {
+		return workFreeCounter;
+	}
+
+	public void setWorkFreeCounter(int workFreeCounter) {
+		this.workFreeCounter = workFreeCounter;
+	}
+
+	public int getHungerCounter() {
+		return hungerCounter;
+	}
+
+	public void setHungerCounter(int hungerCounter) {
+		this.hungerCounter = hungerCounter;
 	}
 
 	public boolean initialize(Map<String, String> attrMap) {

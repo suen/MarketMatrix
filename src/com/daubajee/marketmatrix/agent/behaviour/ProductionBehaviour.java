@@ -43,7 +43,10 @@ public class ProductionBehaviour extends Behaviour {
 			//means there is no more place in the stock to the produced products
 			//raise alert that the stock is full
 			marketAgent.printMsg("Production Stock is full");
-		} 
+			agentAttr.setWorkFreeCounter(agentAttr.getWorkFreeCounter()+1);
+		} else {
+			agentAttr.setWorkFreeCounter(0);
+		}
 		
 //		marketAgent.printMsg("Stock: " + newStock + "/" + productStock + " produced: " + quantityToProduce);
 		
