@@ -55,6 +55,9 @@ public class MarketAgent extends Agent {
 
 		// to check for new MarketAgent in the directory
 		addBehaviour(new DiscoverMarketAgentBehaviour(this));
+
+		// behaviour for incoming messages
+		addBehaviour(new PostManBehaviour(this));
 		
 		// behaviour that deals with sales of products
 		addBehaviour(new SellerBehaviour(this));
@@ -62,9 +65,6 @@ public class MarketAgent extends Agent {
 		// behaviour that deals with buying of products
 		addBehaviour(new BuyerBehaviour(this));
 
-		// behaviour for incoming messages
-		addBehaviour(new PostManBehaviour(this));
-		
 		
 /*		addBehaviour(new TickerBehaviour(this, 1000) {
 			@Override
@@ -142,6 +142,10 @@ public class MarketAgent extends Agent {
 	
 	public void printMsg(String msg){
 		gui.addMsg("[" + this.getLocalName() + "] " + msg);
+	}
+	
+	public void updateAgentGUI(){
+		gui.updateAgents(this);
 	}
 	
 	@Override
