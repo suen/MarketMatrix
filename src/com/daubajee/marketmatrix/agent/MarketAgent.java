@@ -1,12 +1,15 @@
 package com.daubajee.marketmatrix.agent;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.daubajee.marketmatrix.agent.behaviour.BuyerBehaviour;
@@ -22,6 +25,9 @@ public class MarketAgent extends Agent {
 
 	private MarketAgentAttribute attribute = new MarketAgentAttribute();
 	private JavaFXGUIController gui;
+	
+	private List<AID> otherAgents = new ArrayList<AID>();
+	
 	@Override
 	protected void setup() {
 		super.setup();
@@ -130,9 +136,22 @@ public class MarketAgent extends Agent {
 		this.attribute = attribute;
 	}
 	
+	public List<AID> getOtherAgentList(){
+		return otherAgents;
+	}
+	
 	public void printMsg(String msg){
 		gui.addMsg("[" + this.getLocalName() + "] " + msg);
 	}
 	
+	@Override
+	public void doDelete() {
+		super.doDelete();
+		try {
+			DFService.deregister(this);
+		} catch (FIPAException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }
