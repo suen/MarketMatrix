@@ -42,7 +42,10 @@ public class ConsumingBehaviour extends Behaviour {
 			//means there is no enough quantity in the stock to consume sufficiently
 			//raise alert that the consumption requirement is not being met
 			marketAgent.printMsg("Agent is hungry");
-		} 
+			agentAttr.setHungerCounter(agentAttr.getHungerCounter()+1);
+		} else {
+			agentAttr.setHungerCounter(0);
+		}
 		
 //		marketAgent.printMsg("Stock: " + newStock + "/" + productStock + " consumed: " + quantityToConsume);
 		
