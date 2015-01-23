@@ -19,6 +19,7 @@ import com.daubajee.marketmatrix.agent.behaviour.PostManBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.ProductionBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.SatisfactionCheckBehaviour;
 import com.daubajee.marketmatrix.agent.behaviour.SellerBehaviour;
+import com.daubajee.marketmatrix.agent.behaviour.TraderLogicBehaviour;
 import com.daubajee.marketmatrix.gui.JavaFXGUIController;
 import com.daubajee.marketmatrix.gui.JavaFXVisualisation;
 
@@ -61,6 +62,9 @@ public class MarketAgent extends Agent {
 		// to check for new MarketAgent in the directory
 		addBehaviour(new DiscoverMarketAgentBehaviour(this));
 
+		// fix price and make buy/sell decision
+		addBehaviour(new TraderLogicBehaviour(this));
+		
 		// behaviour for incoming messages
 		addBehaviour(new PostManBehaviour(this));
 		
