@@ -8,6 +8,7 @@ public class TraderLogicBehaviour extends Behaviour {
 	private MarketAgent marketAgent;
 	private final double MINIMAL_PRICE = 0.50;
 	private final double MARGE = 0.50;
+	
 	private long lastChange = 0;
 	public TraderLogicBehaviour(MarketAgent marketAgent) {
 		marketAgent.printMsg(getClass().getSimpleName() + " initialised");
@@ -21,8 +22,6 @@ public class TraderLogicBehaviour extends Behaviour {
 		
 		long diff = curMillis - lastChange;
 
-		// deciding whether or not it is time to produce the product, 
-		// if last production was less than a timeUnit ago, return
 		if (diff < MarketAgent.TIME_UNIT) {
 			return;
 		}
@@ -53,7 +52,7 @@ public class TraderLogicBehaviour extends Behaviour {
 		double actual_price = marketAgent.getAttribute().getPrice();
 		double new_price  = floorPrice(actual_price+MARGE + generateRandomMarge());
 		marketAgent.getAttribute().setPrice(new_price);
-		System.out.println("prix after update " + marketAgent.getAttribute().getPrice());
+		//System.out.println("prix after update " + marketAgent.getAttribute().getPrice());
 	}
 	private double floorPrice(double new_price){
 		if(new_price < MINIMAL_PRICE){
