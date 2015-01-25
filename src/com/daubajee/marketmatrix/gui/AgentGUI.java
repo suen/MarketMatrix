@@ -71,11 +71,14 @@ public class AgentGUI extends Pane {
 		consumeStockMaximum = String.valueOf(attr.getConsumeProductStockCapacity());
 		produces = attr.getProduces();
 		produceRate = String.valueOf(attr.getProduceRate());
-		price = String.valueOf(attr.getPrice());
+		price = String.format("%.02f", attr.getPrice());
+//		price = String.valueOf(attr.getPrice());
 		produceStock = String.valueOf(attr.getProduceProductStock());
 		produceStockMaximum = String.valueOf(attr.getProduceProductStockCapacity());
-		money = String.valueOf(attr.getMoney());
-		satisfaction = String.valueOf(attr.getSatisfaction());
+//		money = String.valueOf(attr.getMoney());
+		money = String.format("%.02f", attr.getMoney());
+		satisfaction = String.format("%.02f", attr.getSatisfaction()*100);
+//		satisfaction = String.valueOf(attr.getSatisfaction());
 		
 		consumesLabel.setText("Consumes " + consumes + " : " + consumesRate+ " / TU");
 		consumeStockLabel.setText("Consume Stock: " + consumeStock+" / " + consumeStockMaximum);
