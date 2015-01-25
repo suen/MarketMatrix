@@ -58,6 +58,14 @@ public class MarketAgentAttribute {
 		this.produceProductStock = produceProductStock;
 	}
 
+	public void produceProductIn(int produceProductStock) {
+		this.produceProductStock += produceProductStock;
+	}
+
+	public void produceProductOut(int produceProductStock) {
+		this.produceProductStock -= produceProductStock;
+	}
+	
 	public int getProduceProductStockCapacity() {
 		return produceProductStockCapacity;
 	}
@@ -74,6 +82,14 @@ public class MarketAgentAttribute {
 		this.consumeProductStock = consumeProductStock;
 	}
 
+	public void consumeProductIn(int consumeProductStock) {
+		this.consumeProductStock += consumeProductStock;
+	}
+
+	public void consumeProductOut(int consumeProductStock) {
+		this.consumeProductStock -= consumeProductStock;
+	}
+	
 	public int getConsumeProductStockCapacity() {
 		return consumeProductStockCapacity;
 	}
@@ -96,6 +112,14 @@ public class MarketAgentAttribute {
 
 	public void setMoney(double money) {
 		this.money = money;
+	}
+	
+	public void cashIn(double money){
+		this.money += money;
+	}
+
+	public void cashOut(double money){
+		this.money -= money;
 	}
 
 	public double getPrice() {
