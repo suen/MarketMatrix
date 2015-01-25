@@ -71,7 +71,7 @@ public class MarketAgentCreator extends Agent {
 	    String agentParam = "produces="+produces+",produceRate="+String.valueOf(produceRate)
 	    		+",consumes="+consumes+",consumeRate="+String.valueOf(consumeRate)+","
 				+ "consumeStock=10,consumeStockCapacity=100,produceStock=10,produceStockCapacity=200,"
-				+ "price=2,money=10,satisfaction=50";
+				+ "price=2,money=10,satisfaction=1";
 	    
 	    String agentName = names[(agentCounter++)%13]+String.valueOf(agentCounter);
 	    
