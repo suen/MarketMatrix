@@ -11,6 +11,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.daubajee.marketmatrix.agent.MarketAgent;
+import com.daubajee.marketmatrix.agent.MarketAgentAttribute;
 
 public class SellerBehaviour extends Behaviour {
 
@@ -92,11 +93,13 @@ public class SellerBehaviour extends Behaviour {
 		ACLMessage reply = cfpMsg.createReply();
 		reply.setConversationId("for-buyer");
 		reply.setPerformative(ACLMessage.PROPOSE);
+		reply.setReplyWith(cfpMsg.getReplyWith());
 		
 		JSONObject replyContent = new JSONObject();
 		replyContent.put("product", marketAgent.getAttribute().getProduces());
 		replyContent.put("quantity", String.valueOf(quantity));
-		replyContent.put("price", String.valueOf(marketAgent.getAttribute().getPrice()));
+		replyContent.put("price", String.format("%.02f",marketAgent.getAttribute().getPrice()));
+		reply.setContent(replyContent.toString());
 		
 		marketAgent.send(reply);
 		
@@ -106,13 +109,35 @@ public class SellerBehaviour extends Behaviour {
 	private void treatAcceptProposal() {
 		if (acceptMsgQueue.size()==0)
 			return;
-		
 		ACLMessage acptMsg = acceptMsgQueue.pop();
-		if (acptMsg!=null){
 		
-			
-			acptMsg = acceptMsgQueue.pop();
+		String content = acptMsg.getContent();
+		
+		JSONObject contentJson = new JSONObject(content);
+		
+		String product = (String) contentJson.get("product");
+		int quantity = Integer.parseInt((String)contentJson.get("quantity"));
+		double price = Double.parseDouble((String) contentJson.get("price"));
+		
+		MarketAgentAttribute agentAttributes = marketAgent.getAttribute();
+		
+		if (!agentAttributes.getProduces().equals(product)){
+			// means we got the wrong ACCEPT message
+			marketAgent.printMsg("ACCEPT_PROPOSAL for wrong product received");
+			return;
 		}
+		
+		double priceTotal = price * quantity;
+		agentAttributes.cashIn(priceTotal);
+		agentAttributes.produceProductOut(quantity);
+		
+		ACLMessage confirmReply = acptMsg.createReply();
+		confirmReply.setPerformative(ACLMessage.CONFIRM);
+		confirmReply.setConversationId("for-buyer");
+		confirmReply.setContent(content);
+		confirmReply.setReplyWith(acptMsg.getReplyWith());
+		
+		marketAgent.send(confirmReply);
 	}
 
 	@Override

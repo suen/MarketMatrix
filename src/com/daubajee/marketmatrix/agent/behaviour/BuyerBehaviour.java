@@ -14,16 +14,22 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.daubajee.marketmatrix.agent.MarketAgent;
+import com.daubajee.marketmatrix.agent.MarketAgentAttribute;
 
 public class BuyerBehaviour extends Behaviour {
 
 	private MessageTemplate msgTemp;
 	private MarketAgent marketAgent;
 
-	private LinkedList<ACLMessage> 
-				proposeMsgQueue = new LinkedList<ACLMessage>();
-	private Map<String, List<ACLMessage>> 
-				proposalsReceived = new HashMap<String, List<ACLMessage>>();
+	private LinkedList<ACLMessage> proposeMsgQueue 
+							= new LinkedList<ACLMessage>();
+	
+	private Map<String, List<ACLMessage>> proposalsReceived 
+							= new HashMap<String, List<ACLMessage>>();
+	
+	private List<ACLMessage> confirmations
+							= new ArrayList<ACLMessage>();
+	
 	private Map<String, Long> proposalTimeOuts = new HashMap<String, Long>();
 	
 	public BuyerBehaviour(MarketAgent marketAgent) {
@@ -39,9 +45,11 @@ public class BuyerBehaviour extends Behaviour {
 
 		} else if (message.getPerformative()==ACLMessage.PROPOSE) {
 			proposeMsgQueue.add(message);
-			marketAgent.printMsg("Proposal received");
+			marketAgent.printMsg("Proposal received for : " + message.getReplyWith());
 		} else if (message.getPerformative() == ACLMessage.CONFIRM) {
-
+			
+			marketAgent.printMsg("Confirmation received for : " + message.getReplyWith());
+			confirmations.add(message);
 		}
 
 		initCFPMsg();
@@ -49,6 +57,8 @@ public class BuyerBehaviour extends Behaviour {
 		sortProposeMsgQueue();
 		
 		treatProposeMsgQueue();
+		
+		treatConfirmations();
 
 		block();
 	}
@@ -73,7 +83,7 @@ public class BuyerBehaviour extends Behaviour {
 		String consumes = marketAgent.getAttribute().getConsumes();
 		JSONObject msgContent = new JSONObject();
 		msgContent.put("product", consumes);
-		msgContent.put("quantity", "1");
+		msgContent.put("quantity", "5");
 		msgContent.put("proposal-id", proposalId);
 		
 		newcfp.setContent(msgContent.toString());
@@ -94,8 +104,10 @@ public class BuyerBehaviour extends Behaviour {
 		ACLMessage proposalMsg = proposeMsgQueue.pop();
 		
 		for (String proposalId : proposalsReceived.keySet()) {
-			if (!proposalMsg.getReplyWith().equals(proposalId))
+			if (!proposalMsg.getReplyWith().equals(proposalId)){
+				marketAgent.printMsg("A message with bad reply-to '" + proposalMsg.getReplyWith() + "' expected : '" +proposalId+ "'");
 				continue;
+			}
 			proposalsReceived.get(proposalId).add(proposalMsg);
 		}
 	}
@@ -128,6 +140,7 @@ public class BuyerBehaviour extends Behaviour {
 			for(ACLMessage proposal: proposalList){
 
 				String content = proposal.getContent();
+				System.out.println("Msg content : " + content);
 				JSONObject proposalJson = new JSONObject(content);
 				
 				if (!(proposalJson.has("product") && proposalJson.has("quantity")
@@ -168,6 +181,8 @@ public class BuyerBehaviour extends Behaviour {
 			ACLMessage replyCheapestProposal = cheapestProposal.createReply();
 			replyCheapestProposal.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 			replyCheapestProposal.setConversationId("for-seller");
+			replyCheapestProposal.setReplyWith(proposalId);
+			replyCheapestProposal.setContent(cheapestProposal.getContent());
 			marketAgent.send(replyCheapestProposal);
 
 			marketAgent.printMsg("For '"+proposalId + "', the cheapest deal is : " + cheapestsofar);
@@ -184,10 +199,41 @@ public class BuyerBehaviour extends Behaviour {
 		}
 		
 	}
+	
+	private void treatConfirmations() {
+		
+		if (confirmations.size()==0){
+			return;
+		}
+		
+		ACLMessage confirmationMsg = confirmations.get(0);
+		
+		String content = confirmationMsg.getContent();
+		
+		JSONObject contentJson = new JSONObject(content);
+		
+		String product = (String) contentJson.get("product");
+		int quantity = Integer.parseInt((String)contentJson.get("quantity"));
+		double price = Double.parseDouble((String) contentJson.get("price"));
+		
+		MarketAgentAttribute agentAttributes = marketAgent.getAttribute();
+		
+		if (!agentAttributes.getConsumes().equals(product)){
+			// means we got the wrong ACCEPT message
+			marketAgent.printMsg("CONFIRM for wrong product received");
+			return;
+		}
+		
+		double priceTotal = price * quantity;
+		agentAttributes.cashOut(priceTotal);
+		agentAttributes.consumeProductIn(quantity);
+		
+	}
+
 
 	@Override
 	public boolean done() {
-		return proposalsReceived.size()==0;
+		return false;
 	}
 
 }
