@@ -14,8 +14,8 @@ import jade.wrapper.StaleProxyException;
  */
 public class MarketAgentCreator extends Agent {
 
-	private String[] names = {"stephane", "julien", "moly", "patrick",
-								"ninda", "salina", "luna"};
+	private String[] names = {"stephane", "julien", "moly", "patrick", "elizabeth", "karine",
+								"thiery", "nathalie", "luna", "francois", "daniel", "richard", "chloe"};
 	private String[] params = {
 			"produces=Wheat,produceRate=6,consumes=Potatoes,consumeRate=4,"
 				+ "consumeStock=32,consumeStockCapacity=400,produceStock=80,produceStockCapacity=400,"
@@ -73,13 +73,11 @@ public class MarketAgentCreator extends Agent {
 				+ "consumeStock=10,consumeStockCapacity=100,produceStock=10,produceStockCapacity=200,"
 				+ "price=2,money=10,satisfaction=50";
 	    
-	    String agentName = names[(agentCounter++)%8]+String.valueOf(agentCounter);
+	    String agentName = names[(agentCounter++)%13]+String.valueOf(agentCounter);
 	    
 		try {
-			
 			AgentController a = c.createNewAgent( agentName, "com.daubajee.marketmatrix.agent.MarketAgent", agentParam.split(","));
 			a.start();
-			
 		} catch (StaleProxyException e) {
 			gui.addMsg("Could not create agent, StaleProxyException thrown");
 			e.printStackTrace();

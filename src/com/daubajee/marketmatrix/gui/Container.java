@@ -85,9 +85,7 @@ public class Container extends BorderPane	{
 		ObservableList<String> list = FXCollections.observableArrayList();
 		consumeBox.setItems(list);
 		producesBox.setItems(list);
-		list.addAll("Apple", "Banna", "Orange");
-
-		
+		list.addAll("Apple", "Banna", "Orange", "Rice", "Wheat", "Corn", "Barley");
 		
 /*		for(int i=0; i<10; i++){
 			agentContainer.getChildren().add(new AgentGUI(String.valueOf(i)));

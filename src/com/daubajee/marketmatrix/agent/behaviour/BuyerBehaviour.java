@@ -63,7 +63,7 @@ public class BuyerBehaviour extends Behaviour {
 			return;
 		
 		long currentTimeStamp = System.currentTimeMillis();
-		String proposalId = "Proposal: " + String.valueOf(currentTimeStamp);
+		String proposalId = "PROPOSAL-" + String.valueOf(currentTimeStamp);
 		
 		ACLMessage newcfp = new ACLMessage(ACLMessage.CFP);
 		for (AID aid: otherAgentList){
@@ -120,6 +120,7 @@ public class BuyerBehaviour extends Behaviour {
 				//turns out nobody replied to our proposal
 				marketAgent.printMsg("No proposal received for : " + proposalId);
 				finishedProposals.add(proposalId);
+				continue;
 			}
 			
 			ACLMessage cheapestProposal = null;
