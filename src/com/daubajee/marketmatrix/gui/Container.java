@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
@@ -49,7 +50,7 @@ public class Container extends BorderPane	{
 	
 
 	
-	private TextFlow textflow = new TextFlow();
+	private VBox textflow = new VBox();
 	private MarketAgentCreator agentCreator;
 	
 	public Container(){
@@ -102,9 +103,21 @@ public class Container extends BorderPane	{
 		AgentGUI node = (AgentGUI) agentContainer.getChildren().get(index);
 		node.updateLabels();
 	}
-	
+
+	private boolean odd = true;
 	public void addMsg(String msg) {
-		textflow.getChildren().add(0, new Text(msg+"\n"));
+		Label label = new Label(msg);
+		label.setWrapText(true);
+		if (odd){
+			label.setStyle("-fx-background-color: #efefef;"
+					+ "-fx-padding: 10px;");
+			odd = false;
+		} else {
+			label.setStyle("-fx-background-color: #ffffff;"
+					+ "-fx-padding: 10px;");
+			odd = true;
+		}
+		textflow.getChildren().add(0, label);
 	}
 	
 	public void flushMsg(){
@@ -139,9 +152,10 @@ public class Container extends BorderPane	{
 		agentContainer.setMinWidth(sp1.getWidth());
 
 		sp2.setStyle("-fx-pref-width: 500px;"
-				+ "-fx-padding: 10px;");
-		textflow.setStyle("-fx-pref-width: 400px;");
-		textflow.setLineSpacing(5);
+				+ "-fx-padding: 5px;");
+		textflow.setStyle("-fx-pref-width: 400px;"
+				+ "-fx-spacing: 1px;");
+		//textflow.setLineSpacing(5);
 		
 		
 		createAgentLabel.setStyle("-fx-font-size: 1.8em;");
