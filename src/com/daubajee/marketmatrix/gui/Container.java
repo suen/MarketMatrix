@@ -50,6 +50,7 @@ public class Container extends BorderPane	{
 
 	
 	private TextFlow textflow = new TextFlow();
+	private MarketAgentCreator agentCreator;
 	
 	public Container(){
 		initLayout();
@@ -172,9 +173,11 @@ public class Container extends BorderPane	{
 					String consumeRateStr = consumeRateField.getText();
 					String produceRateStr = produceRateField.getText();
 					
-					double cosumeRate = Double.parseDouble(consumeRateStr);
+					double consumeRate = Double.parseDouble(consumeRateStr);
 					double produceRate = Double.parseDouble(produceRateStr);
 				
+					agentCreator.onAgentAdd(consumes, consumeRate, produces, produceRate);
+					
 				} catch (NumberFormatException e) {
 					addMsg("Please check your data");
 					e.printStackTrace();
@@ -187,6 +190,9 @@ public class Container extends BorderPane	{
 		});
 	}
 	
+	public void registerAgentCreator(MarketAgentCreator creator){
+		this.agentCreator = creator;
+	}
 
 	
 	

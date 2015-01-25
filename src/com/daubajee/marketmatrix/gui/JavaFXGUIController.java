@@ -6,6 +6,7 @@ import java.util.Map;
 import javafx.application.Platform;
 
 import com.daubajee.marketmatrix.agent.MarketAgent;
+import com.daubajee.marketmatrix.agent.MarketAgentCreator;
 
 public class JavaFXGUIController {
 
@@ -41,6 +42,10 @@ public class JavaFXGUIController {
 				registeredAgents.put(agent, agui);
 			}
 		});
+	}
+	
+	public void registerAgentCreator(MarketAgentCreator creator){
+		container.registerAgentCreator(creator);
 	}
 	
 	public void updateAgents(MarketAgent agent){

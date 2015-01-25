@@ -1,8 +1,12 @@
 package com.daubajee.marketmatrix.agent;
 
+import com.daubajee.marketmatrix.gui.JavaFXGUIController;
+import com.daubajee.marketmatrix.gui.JavaFXVisualisation;
+
 import jade.core.Agent;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
+import jade.wrapper.StaleProxyException;
 
 /**
  * @author surendra
@@ -35,13 +39,21 @@ public class MarketAgentCreator extends Agent {
 				+ "consumeStock=32,consumeStockCapacity=100,produceStock=32,produceStockCapacity=100,"
 				+ "price=2,money=0,satisfaction=50"
 			};
+	private JavaFXGUIController gui;
+	private int agentCounter = 0;
 	
 	@Override
 	protected void setup() {
+		super.setup();
 
+		while (! JavaFXVisualisation.showGUI());
+		gui = JavaFXGUIController.getInstance();
+
+		gui.registerAgentCreator(this);
+		
 	    AgentContainer c = getContainerController();
 
-	    for(int i=0; i<7; i++){
+	    for(int i=0; i<0; i++){
 	    	try {
 	    		AgentController a = c.createNewAgent( names[i], 
 	    				"com.daubajee.marketmatrix.agent.MarketAgent", params[i].split(","));
@@ -50,7 +62,32 @@ public class MarketAgentCreator extends Agent {
 	    	catch (Exception e){}
 	    }
 		
-		super.setup();
 	}
+	
+	public void onAgentAdd(String consumes, double consumeRate,
+					String produces, double produceRate){
+	    AgentContainer c = getContainerController();
+	    
+	    String agentParam = "produces="+produces+",produceRate="+String.valueOf(produceRate)
+	    		+",consumes="+consumes+",consumeRate="+String.valueOf(consumeRate)+","
+				+ "consumeStock=10,consumeStockCapacity=100,produceStock=10,produceStockCapacity=200,"
+				+ "price=2,money=10,satisfaction=50";
+	    
+	    String agentName = names[(agentCounter++)%8]+String.valueOf(agentCounter);
+	    
+		try {
+			
+			AgentController a = c.createNewAgent( agentName, "com.daubajee.marketmatrix.agent.MarketAgent", agentParam.split(","));
+			a.start();
+			
+		} catch (StaleProxyException e) {
+			gui.addMsg("Could not create agent, StaleProxyException thrown");
+			e.printStackTrace();
+		}
+		
+	}
+	
 
+
+	
 }
