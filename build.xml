@@ -13,6 +13,7 @@
        <!-- <pathelement location="lib/jfxrt.jar"/> -->
        <!-- <pathelement location="lib/j2ee.jar"/> -->
         <pathelement location="lib/jade-4.2.jar"/>
+        <pathelement location="lib/json.jar"/>
       <!--  <pathelement location="lib/javaee.jar"/> -->
     </path>
     <target name="init">
@@ -40,7 +41,7 @@
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
     <target depends="build" name="MarketMatrix_JADE">
         <java classname="jade.Boot" failonerror="true" fork="yes">
-            <arg line="-host localhost -agents agentStarter:com.daubajee.marketmatrix.agent.MarketAgentCreat"/>
+            <arg line="-host localhost -agents agentStarter:com.daubajee.marketmatrix.agent.MarketAgentCreator"/>
             <classpath refid="MarketMatrix.classpath"/>
         </java>
     </target>
