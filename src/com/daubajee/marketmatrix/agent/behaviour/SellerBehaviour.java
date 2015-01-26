@@ -126,7 +126,7 @@ public class SellerBehaviour extends Behaviour {
 			marketAgent.printMsg("ACCEPT_PROPOSAL for wrong product received");
 			return;
 		}
-		
+			
 		double priceTotal = price * quantity;
 		agentAttributes.cashIn(priceTotal);
 		agentAttributes.produceProductOut(quantity);

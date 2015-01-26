@@ -27,8 +27,8 @@ public class BuyerBehaviour extends Behaviour {
 	private Map<String, List<ACLMessage>> proposalsReceived 
 							= new HashMap<String, List<ACLMessage>>();
 	
-	private List<ACLMessage> confirmations
-							= new ArrayList<ACLMessage>();
+	private LinkedList<ACLMessage> confirmations
+							= new LinkedList<ACLMessage>();
 	
 	private Map<String, Long> proposalTimeOuts = new HashMap<String, Long>();
 	
@@ -206,7 +206,7 @@ public class BuyerBehaviour extends Behaviour {
 			return;
 		}
 		
-		ACLMessage confirmationMsg = confirmations.get(0);
+		ACLMessage confirmationMsg = confirmations.pop();
 		
 		String content = confirmationMsg.getContent();
 		
