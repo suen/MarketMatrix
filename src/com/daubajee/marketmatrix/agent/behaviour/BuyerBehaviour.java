@@ -1,7 +1,7 @@
 package com.daubajee.marketmatrix.agent.behaviour;
 
 import jade.core.AID;
-import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import com.daubajee.marketmatrix.agent.MarketAgent;
 import com.daubajee.marketmatrix.agent.MarketAgentAttribute;
 
-public class BuyerBehaviour extends Behaviour {
+public class BuyerBehaviour extends TickerBehaviour {
 
 	private MessageTemplate msgTemp;
 	private MarketAgent marketAgent;
@@ -33,12 +33,12 @@ public class BuyerBehaviour extends Behaviour {
 	private Map<String, Long> proposalTimeOuts = new HashMap<String, Long>();
 	
 	public BuyerBehaviour(MarketAgent marketAgent) {
+		super(marketAgent, 1000);
 		msgTemp = MessageTemplate.MatchConversationId("for-buyer");
 		this.marketAgent = marketAgent;
 	}
 
-	@Override
-	public void action() {
+	public void agentAction() {
 		ACLMessage message = marketAgent.receive(msgTemp);
 
 		if (message == null) {
@@ -232,8 +232,8 @@ public class BuyerBehaviour extends Behaviour {
 
 
 	@Override
-	public boolean done() {
-		return false;
+	protected void onTick() {
+		agentAction();
 	}
 
 }

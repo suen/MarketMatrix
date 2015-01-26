@@ -1,22 +1,22 @@
 package com.daubajee.marketmatrix.agent.behaviour;
 
+import jade.core.behaviours.TickerBehaviour;
+
 import com.daubajee.marketmatrix.agent.MarketAgent;
 
-import jade.core.behaviours.Behaviour;
-
-public class SatisfactionCheckBehaviour extends Behaviour {
+public class SatisfactionCheckBehaviour extends TickerBehaviour {
 	private MarketAgent marketAgent;
 	private static final double MAX_SATISFACTION = 1.0;
 	private static final double BOOST = 0.5;
 	private long lastChange = 0;
 	public SatisfactionCheckBehaviour(MarketAgent marketAgent) {
+		super(marketAgent, 1000);
 		this.marketAgent = marketAgent;
 		marketAgent.printMsg(getClass().getSimpleName() + " initialised");
 		lastChange = System.currentTimeMillis();
 	}
 
-	@Override
-	public void action() {
+	public void agentAction() {
 		long curMillis = System.currentTimeMillis();
 		
 		long diff = curMillis - lastChange;
@@ -40,10 +40,6 @@ public class SatisfactionCheckBehaviour extends Behaviour {
 		block(4000);
 	}
 
-	@Override
-	public boolean done() {
-		return false;
-	}
 	
 	private double capSatisfaction(double satisfaction){
 		if(satisfaction >= MAX_SATISFACTION){
@@ -52,5 +48,10 @@ public class SatisfactionCheckBehaviour extends Behaviour {
 			satisfaction = 0.0;
 		}
 		return satisfaction;
+	}
+
+	@Override
+	protected void onTick() {
+		agentAction();
 	}
 }

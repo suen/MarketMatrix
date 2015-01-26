@@ -1,23 +1,23 @@
 package com.daubajee.marketmatrix.agent.behaviour;
 
+import jade.core.behaviours.TickerBehaviour;
+
 import com.daubajee.marketmatrix.agent.MarketAgent;
 
-import jade.core.behaviours.Behaviour;
-
-public class TraderLogicBehaviour extends Behaviour {
+public class TraderLogicBehaviour extends TickerBehaviour {
 	private MarketAgent marketAgent;
 	private final double MINIMAL_PRICE = 0.50;
 	private final double MARGE = 0.50;
 	
 	private long lastChange = 0;
 	public TraderLogicBehaviour(MarketAgent marketAgent) {
+		super(marketAgent, 1000);
 		marketAgent.printMsg(getClass().getSimpleName() + " initialised");
 		this.marketAgent = marketAgent;
 		lastChange = System.currentTimeMillis();
 	}
 
-	@Override
-	public void action() {
+	public void agentAction() {
 		long curMillis = System.currentTimeMillis();
 		
 		long diff = curMillis - lastChange;
@@ -36,11 +36,6 @@ public class TraderLogicBehaviour extends Behaviour {
 		}
 		
 		block(4000);
-	}
-
-	@Override
-	public boolean done() {
-		return false;
 	}
 
 	private void dropPrice() {
@@ -63,5 +58,10 @@ public class TraderLogicBehaviour extends Behaviour {
 	}
 	private double generateRandomMarge(){
 		return Math.random() % MARGE;
+	}
+
+	@Override
+	protected void onTick() {
+		agentAction();
 	}
 }

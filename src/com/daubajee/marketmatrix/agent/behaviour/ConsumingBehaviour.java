@@ -1,22 +1,22 @@
 package com.daubajee.marketmatrix.agent.behaviour;
 
-import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.TickerBehaviour;
 
 import com.daubajee.marketmatrix.agent.MarketAgent;
 import com.daubajee.marketmatrix.agent.MarketAgentAttribute;
 
-public class ConsumingBehaviour extends Behaviour {
+public class ConsumingBehaviour extends TickerBehaviour{
 	
 	private MarketAgent marketAgent;
 	private long lastConsumption;
 
 	public ConsumingBehaviour(MarketAgent marketAgent) {
+		super(marketAgent, 1000);
 		this.marketAgent = marketAgent;
 		lastConsumption = System.currentTimeMillis();
 	}
 
-	@Override
-	public void action() {
+	public void agentAction() {
 		MarketAgentAttribute agentAttr = marketAgent.getAttribute();
 		
 		long curMillis = System.currentTimeMillis();
@@ -56,8 +56,10 @@ public class ConsumingBehaviour extends Behaviour {
 	}
 
 	@Override
-	public boolean done() {
-		return false;
+	protected void onTick() {
+		agentAction();
 	}
+
+
 
 }

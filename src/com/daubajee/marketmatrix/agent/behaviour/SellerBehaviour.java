@@ -1,6 +1,6 @@
 package com.daubajee.marketmatrix.agent.behaviour;
 
-import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import com.daubajee.marketmatrix.agent.MarketAgent;
 import com.daubajee.marketmatrix.agent.MarketAgentAttribute;
 
-public class SellerBehaviour extends Behaviour {
+public class SellerBehaviour extends TickerBehaviour{
 
 	private MessageTemplate msgTemp;
 	private MarketAgent marketAgent;
@@ -25,14 +25,15 @@ public class SellerBehaviour extends Behaviour {
 	private long lastrun;
 	
 	public SellerBehaviour(MarketAgent marketAgent) {
+		super(marketAgent, 1000);
 		msgTemp = MessageTemplate.MatchConversationId("for-seller");
 		this.marketAgent = marketAgent;
 		lastrun = System.currentTimeMillis();
 	}
 
 	int count = 0;
-	@Override
-	public void action() {
+	
+	public void agentAction() {
 	
 		ACLMessage message = marketAgent.receive(msgTemp);
 		
@@ -140,9 +141,10 @@ public class SellerBehaviour extends Behaviour {
 		marketAgent.send(confirmReply);
 	}
 
+
 	@Override
-	public boolean done() {
-		return false;
+	protected void onTick() {
+		agentAction();		
 	}
 
 }

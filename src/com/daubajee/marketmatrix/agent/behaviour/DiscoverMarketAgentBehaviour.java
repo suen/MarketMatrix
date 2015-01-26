@@ -1,26 +1,26 @@
 package com.daubajee.marketmatrix.agent.behaviour;
 
-import java.util.List;
-
 import jade.core.AID;
-import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
+import java.util.List;
+
 import com.daubajee.marketmatrix.agent.MarketAgent;
 
-public class DiscoverMarketAgentBehaviour extends Behaviour {
+public class DiscoverMarketAgentBehaviour extends TickerBehaviour {
 	
 	private MarketAgent marketAgent;
 
 	public DiscoverMarketAgentBehaviour(MarketAgent marketAgent) {
+		super(marketAgent, 1000);
 		this.marketAgent = marketAgent;
 	}
 
-	@Override
-	public void action() {
+	public void agentAction() {
 		DFAgentDescription template = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("market-agent");
@@ -45,12 +45,12 @@ public class DiscoverMarketAgentBehaviour extends Behaviour {
 			marketAgent.printMsg(String.valueOf((agentList.size() - intialSize))
 					+ " new agents found in directory");
 		}
-		block(10000);
 	}
 
+
 	@Override
-	public boolean done() {
-		return false;
+	protected void onTick() {
+		agentAction();
 	}
 
 }
