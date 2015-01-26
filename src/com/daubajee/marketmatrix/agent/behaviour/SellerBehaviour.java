@@ -6,6 +6,7 @@ import jade.lang.acl.MessageTemplate;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -99,7 +100,7 @@ public class SellerBehaviour extends TickerBehaviour{
 		JSONObject replyContent = new JSONObject();
 		replyContent.put("product", marketAgent.getAttribute().getProduces());
 		replyContent.put("quantity", String.valueOf(quantity));
-		replyContent.put("price", String.format("%.02f",marketAgent.getAttribute().getPrice()));
+		replyContent.put("price", String.format(Locale.ENGLISH,"%.02f",marketAgent.getAttribute().getPrice()));
 		reply.setContent(replyContent.toString());
 		
 		marketAgent.send(reply);
@@ -127,7 +128,12 @@ public class SellerBehaviour extends TickerBehaviour{
 			marketAgent.printMsg("ACCEPT_PROPOSAL for wrong product received");
 			return;
 		}
-			
+		
+		if (agentAttributes.getProduceProductStock() < quantity){
+			// means we have already sell part of our product to other agent
+			marketAgent.printMsg("We no longer have the correct amount of product ");
+			return;
+		}
 		double priceTotal = price * quantity;
 		agentAttributes.cashIn(priceTotal);
 		agentAttributes.produceProductOut(quantity);

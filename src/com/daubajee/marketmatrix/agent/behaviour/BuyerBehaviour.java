@@ -136,7 +136,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 			}
 			
 			ACLMessage cheapestProposal = null;
-			double cheapestsofar = 0;
+			double cheapestSoFar = 0;
 			for(ACLMessage proposal: proposalList){
 
 				String content = proposal.getContent();
@@ -161,13 +161,13 @@ public class BuyerBehaviour extends TickerBehaviour {
 				
 				if (cheapestProposal==null){
 					cheapestProposal = proposal;
-					cheapestsofar = price;
+					cheapestSoFar = price;
 					//the first proposal
 					continue;
 				}
-				if (cheapestsofar > price){
+				if (cheapestSoFar > price){
 					cheapestProposal = proposal;
-					cheapestsofar = price;
+					cheapestSoFar = price;
 				}
 			} // end of iterator for Messages in a proposalId
 		
@@ -177,7 +177,11 @@ public class BuyerBehaviour extends TickerBehaviour {
 				finishedProposals.add(proposalId);
 				continue;
 			}
-			
+			double buyerMoney =  marketAgent.getAttribute().getMoney();
+			if(cheapestSoFar > buyerMoney){
+				marketAgent.printMsg("Price is too high for me : '" + proposalId + "'");
+				continue;
+			}
 			ACLMessage replyCheapestProposal = cheapestProposal.createReply();
 			replyCheapestProposal.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 			replyCheapestProposal.setConversationId("for-seller");
@@ -185,7 +189,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 			replyCheapestProposal.setContent(cheapestProposal.getContent());
 			marketAgent.send(replyCheapestProposal);
 
-			marketAgent.printMsg("For '"+proposalId + "', the cheapest deal is : " + cheapestsofar);
+			marketAgent.printMsg("For '"+proposalId + "', the cheapest deal is : " + cheapestSoFar);
 			finishedProposals.add(proposalId);
 		}
 
