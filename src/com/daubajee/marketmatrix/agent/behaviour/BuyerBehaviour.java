@@ -137,6 +137,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 			
 			ACLMessage cheapestProposal = null;
 			double cheapestSoFar = 0;
+			double quantityForCheapest = 0;
 			for(ACLMessage proposal: proposalList){
 
 				String content = proposal.getContent();
@@ -159,6 +160,15 @@ public class BuyerBehaviour extends TickerBehaviour {
 					continue;
 				}
 				
+				String quantityStr = (String) proposalJson.get("quantity");
+				double quantity = 0.0;
+				try {
+					quantity = Double.parseDouble(quantityStr);
+				} catch (NumberFormatException e) {
+					marketAgent.printMsg("A proposal wrong quantity in wrong format detected");
+					continue;
+				}
+				
 				if (cheapestProposal==null){
 					cheapestProposal = proposal;
 					cheapestSoFar = price;
@@ -168,6 +178,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 				if (cheapestSoFar > price){
 					cheapestProposal = proposal;
 					cheapestSoFar = price;
+					quantityForCheapest = quantity;
 				}
 			} // end of iterator for Messages in a proposalId
 		
@@ -178,7 +189,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 				continue;
 			}
 			double buyerMoney =  marketAgent.getAttribute().getMoney();
-			if(cheapestSoFar > buyerMoney){
+			if((cheapestSoFar*quantityForCheapest) > buyerMoney){
 				marketAgent.printMsg("Price is too high for me : '" + proposalId + "'");
 				continue;
 			}
