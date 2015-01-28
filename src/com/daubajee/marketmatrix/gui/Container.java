@@ -1,33 +1,25 @@
 package com.daubajee.marketmatrix.gui;
 
-import com.daubajee.marketmatrix.agent.MarketAgentCreator;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+
+import com.daubajee.marketmatrix.agent.MarketAgentCreator;
 
 public class Container extends BorderPane	{
 
-	private HBox titleContainer = new HBox();
+	private VBox headerContainer = new VBox();
 	private VBox leftcontainer = new VBox();
 	private FlowPane agentCreationBox = new FlowPane();
 	private ScrollPane sp1 = new ScrollPane();
@@ -59,7 +51,7 @@ public class Container extends BorderPane	{
 	}
 	
 	private void initLayout() {
-		setTop(titleContainer);
+		setTop(headerContainer);
 
 		sp2.setContent(textflow);
 		setRight(sp2);
@@ -67,8 +59,8 @@ public class Container extends BorderPane	{
 		
 		sp1.setContent(agentContainer);
 		
-		titleContainer.getChildren().add(title);		
-		leftcontainer.getChildren().addAll(agentCreationBox, sp1);
+		headerContainer.getChildren().addAll(title, new Separator(), agentCreationBox);		
+		leftcontainer.getChildren().addAll(sp1);
 		
 		agentCreationBox.setHgap(10);
 		
@@ -88,9 +80,9 @@ public class Container extends BorderPane	{
 		producesBox.setItems(list);
 		list.addAll("Apple", "Banna", "Orange", "Rice", "Wheat", "Corn", "Barley");
 		
-/*		for(int i=0; i<10; i++){
+		for(int i=0; i<10; i++){
 			agentContainer.getChildren().add(new AgentGUI(String.valueOf(i)));
-		}*/
+		}
 	}
 	
 	public int addAgentGUI(AgentGUI agui){
@@ -131,16 +123,17 @@ public class Container extends BorderPane	{
 		setStyle("-fx-spacing: 10px;"
 				+ "-fx-pref-height: 700px;");
 		
-		titleContainer.setStyle("-fx-background-color: #dfdfdf;"
+		headerContainer.setStyle("-fx-background-color: #dfdfdf;"
 				+ "-fx-pref-height: 50px;"
 				+ "-fx-padding: 10px;");
-		title.setStyle("-fx-text-fill: #000000; "
+		title.setStyle(""
+					+ "-fx-text-fill: #000000; "
 					+ "-fx-font-family: 'sans-serif';"
 					+ "-fx-font-size: 2.5em; ");
 
 		leftcontainer.setStyle("-fx-min-height: 800px;");
 		
-		sp1.setStyle("-fx-min-height: 500px;"
+		sp1.setStyle("-fx-min-height: 600px;"
 				+ "-fx-min-width: 800px;"
 				+ "-fx-padding: 10px;");
 		
