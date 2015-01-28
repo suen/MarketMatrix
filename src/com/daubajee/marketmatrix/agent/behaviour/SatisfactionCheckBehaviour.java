@@ -8,26 +8,31 @@ public class SatisfactionCheckBehaviour extends TickerBehaviour {
 	private MarketAgent marketAgent;
 	private static final double MAX_SATISFACTION = 1.0;
 	private static final double BOOST = 0.5;
-	private long lastChange = 0;
+	private long lastRun = 0;
 	public SatisfactionCheckBehaviour(MarketAgent marketAgent) {
 		super(marketAgent, 1000);
 		this.marketAgent = marketAgent;
 		marketAgent.printMsg(getClass().getSimpleName() + " initialised");
-		lastChange = System.currentTimeMillis();
+		lastRun = System.currentTimeMillis();
 	}
 
 	public void agentAction() {
 		long curMillis = System.currentTimeMillis();
 		
-		long diff = curMillis - lastChange;
+		long diff = curMillis - lastRun;
 
 		// deciding whether or not it is time to produce the product, 
 		// if last production was less than a timeUnit ago, return
 		if (diff < MarketAgent.TIME_UNIT) {
 			return;
 		}
-		lastChange += MarketAgent.TIME_UNIT;
+		lastRun += MarketAgent.TIME_UNIT;
 
+		if (MarketAgent.PAUSE){
+			return;
+		}
+
+		
 		if(marketAgent.getAttribute().getConsumeProductStock() > 0){
 			marketAgent.getAttribute().setSatisfaction(MAX_SATISFACTION);
 		}else{

@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
+import com.daubajee.marketmatrix.agent.MarketAgent;
 import com.daubajee.marketmatrix.agent.MarketAgentCreator;
 
 public class Container extends BorderPane	{
@@ -40,7 +41,10 @@ public class Container extends BorderPane	{
 	TextField produceRateField = new TextField("1");
 	Button createBtn = new Button("Create");
 	
-
+	private Label pulseLabel = new Label("Pulse :");
+	private TextField pulseField = new TextField();
+	private Button pulseSet = new Button("Set");
+	private Button pulsePlayPause = new Button("Pause");
 	
 	private VBox textflow = new VBox();
 	private MarketAgentCreator agentCreator;
@@ -68,12 +72,17 @@ public class Container extends BorderPane	{
 		separator.setOrientation(Orientation.VERTICAL);
 		Separator separator2 = new Separator();
 		separator2.setOrientation(Orientation.VERTICAL);
+		Separator separator3 = new Separator();
+		separator3.setOrientation(Orientation.VERTICAL);
 		agentCreationBox.getChildren().addAll(createAgentLabel, 
 				consumeLabel, consumeBox, consumeRateLabel, consumeRateField, 
 				separator,
 				produceLabel, producesBox, produceRateLabel, produceRateField,
-				separator2, createBtn
+				separator2, createBtn,
+				separator3, pulseLabel, pulseField, pulseSet, 
+				pulsePlayPause
 				);
+		pulseField.setText(String.valueOf(MarketAgent.TIME_UNIT));
 		
 		ObservableList<String> list = FXCollections.observableArrayList();
 		consumeBox.setItems(list);
@@ -81,7 +90,7 @@ public class Container extends BorderPane	{
 		list.addAll("Apple", "Banna", "Orange", "Rice", "Wheat", "Corn", "Barley");
 		
 		for(int i=0; i<10; i++){
-			agentContainer.getChildren().add(new AgentGUI(String.valueOf(i)));
+			//agentContainer.getChildren().add(new AgentGUI(String.valueOf(i)));
 		}
 	}
 	
@@ -162,6 +171,11 @@ public class Container extends BorderPane	{
 				+ "-fx-font-weight: bold;");
 		createBtn.setStyle("-fx-font-size: 1.3em;");
 		
+		pulseLabel.setStyle("-fx-font-size: 1.0em;"
+				+ "-fx-font-weight: bold;");
+		pulseSet.setStyle("-fx-font-weight: bold;");
+		pulseField.setStyle("-fx-max-width: 60px;");
+		
 		createBtn.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -188,9 +202,41 @@ public class Container extends BorderPane	{
 					e.printStackTrace();
 					return;
 				}
+			}
+		});
+		
+		pulseSet.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent evnt) {
+				String pulseStr = pulseField.getText();
 				
+				int pulse = 0;
+				try {
+					pulse = Integer.parseInt(pulseStr);
+				} catch (NumberFormatException e) {
+					System.err.println("Number Format Exception "
+							+ "while parsing pulse value");
+					return;
+				}
 				
-				
+				MarketAgent.TIME_UNIT = pulse;
+					
+			}
+		});
+		
+		pulsePlayPause.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent evnt) {
+				String pausePlayStr = pulsePlayPause.getText();
+				if (pausePlayStr.equals("Play")){
+					pulsePlayPause.setText("Pause");
+					MarketAgent.PAUSE = false;
+				} else if (pausePlayStr.equals("Pause")){
+					pulsePlayPause.setText("Play");
+					MarketAgent.PAUSE = true;
+				}
 			}
 		});
 	}

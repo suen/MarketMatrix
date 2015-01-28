@@ -8,12 +8,12 @@ import com.daubajee.marketmatrix.agent.MarketAgentAttribute;
 public class ConsumingBehaviour extends TickerBehaviour{
 	
 	private MarketAgent marketAgent;
-	private long lastConsumption;
+	private long lastRun;
 
 	public ConsumingBehaviour(MarketAgent marketAgent) {
 		super(marketAgent, 1000);
 		this.marketAgent = marketAgent;
-		lastConsumption = System.currentTimeMillis();
+		lastRun = System.currentTimeMillis();
 	}
 
 	public void agentAction() {
@@ -21,14 +21,19 @@ public class ConsumingBehaviour extends TickerBehaviour{
 		
 		long curMillis = System.currentTimeMillis();
 		
-		long diff = curMillis - lastConsumption;
+		long diff = curMillis - lastRun;
 
 		// deciding whether or not it is time to consume product, 
 		// if last consumption was less than a timeUnit ago, return
 		if (diff < MarketAgent.TIME_UNIT) {
 			return;
 		}
-		lastConsumption += MarketAgent.TIME_UNIT;
+
+		lastRun += MarketAgent.TIME_UNIT;
+
+		if (MarketAgent.PAUSE){
+			return;
+		}		
 
 		int productStock = agentAttr.getConsumeProductStock();
 		double quantityToConsume = agentAttr.getConsumeRate();

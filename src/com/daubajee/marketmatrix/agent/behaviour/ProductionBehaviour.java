@@ -8,12 +8,12 @@ import com.daubajee.marketmatrix.agent.MarketAgentAttribute;
 public class ProductionBehaviour extends TickerBehaviour{
 
 	private MarketAgent marketAgent;
-	private long lastProduction;
+	private long lastRun;
 
 	public ProductionBehaviour(MarketAgent marketAgent) {
 		super(marketAgent, 1000);
 		this.marketAgent = marketAgent;
-		lastProduction = System.currentTimeMillis();
+		lastRun = System.currentTimeMillis();
 	}
 
 	public void agentAction() {
@@ -21,15 +21,20 @@ public class ProductionBehaviour extends TickerBehaviour{
 		
 		long curMillis = System.currentTimeMillis();
 		
-		long diff = curMillis - lastProduction;
+		long diff = curMillis - lastRun;
 
 		// deciding whether or not it is time to produce the product, 
 		// if last production was less than a timeUnit ago, return
 		if (diff < MarketAgent.TIME_UNIT) {
 			return;
 		}
-		lastProduction += MarketAgent.TIME_UNIT;
-
+		
+		lastRun += MarketAgent.TIME_UNIT;
+		
+		if (MarketAgent.PAUSE){
+			return;
+		}
+		
 
 		int productStock = agentAttr.getProduceProductStock();
 		double quantityToProduce = agentAttr.getProduceRate();

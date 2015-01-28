@@ -9,23 +9,27 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 	private final double MINIMAL_PRICE = 0.50;
 	private final double MARGE = 0.50;
 	
-	private long lastChange = 0;
+	private long lastRun = 0;
 	public TraderLogicBehaviour(MarketAgent marketAgent) {
 		super(marketAgent, 1000);
 		marketAgent.printMsg(getClass().getSimpleName() + " initialised");
 		this.marketAgent = marketAgent;
-		lastChange = System.currentTimeMillis();
+		lastRun = System.currentTimeMillis();
 	}
 
 	public void agentAction() {
 		long curMillis = System.currentTimeMillis();
 		
-		long diff = curMillis - lastChange;
+		long diff = curMillis - lastRun;
 
 		if (diff < MarketAgent.TIME_UNIT) {
 			return;
 		}
-		lastChange += MarketAgent.TIME_UNIT;
+		lastRun += MarketAgent.TIME_UNIT;
+		
+		if (MarketAgent.PAUSE){
+			return;
+		}
 		
 		double money = marketAgent.getAttribute().getMoney();
 		double satisfaction = marketAgent.getAttribute().getSatisfaction();

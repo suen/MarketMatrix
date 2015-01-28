@@ -34,6 +34,10 @@ public class SellerBehaviour extends TickerBehaviour{
 	int count = 0;
 	
 	public void agentAction() {
+		
+		if (MarketAgent.PAUSE){
+			return;
+		}
 	
 		ACLMessage message = marketAgent.receive(msgTemp);
 		

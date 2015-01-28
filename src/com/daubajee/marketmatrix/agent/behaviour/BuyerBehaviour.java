@@ -39,6 +39,10 @@ public class BuyerBehaviour extends TickerBehaviour {
 	}
 
 	public void agentAction() {
+		if (MarketAgent.PAUSE){
+			return;
+		}
+
 		ACLMessage message = marketAgent.receive(msgTemp);
 
 		if (message == null) {
