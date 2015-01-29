@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -204,11 +205,14 @@ public class BuyerBehaviour extends TickerBehaviour {
 				continue;
 			}
 			double buyerMoney = marketAgent.getAttribute().getMoney();
-			//double (buyerMoney/cheapestSoFar);
-			if ((cheapestSoFar * quantityForCheapest) > buyerMoney) {
+			Double tmpValueTransaction = (buyerMoney/cheapestSoFar);
+			tmpValueTransaction = (tmpValueTransaction > quantityForCheapest) ? tmpValueTransaction%quantityForCheapest : tmpValueTransaction; 
+			int quantityBuy = tmpValueTransaction.intValue();
+			System.out.println("quantity buy ="+quantityBuy);
+			if (quantityBuy <= 0) {
 				marketAgent.printMsg("Price is too high for me : '"
 						+ proposalId + "' by "
-						+ cheapestProposal.getSender().getName());
+						+ cheapestProposal.getSender().getLocalName());
 				finishedProposals.add(proposalId);
 				continue;
 			}
@@ -216,12 +220,18 @@ public class BuyerBehaviour extends TickerBehaviour {
 			replyCheapestProposal.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 			replyCheapestProposal.setConversationId("for-seller");
 			replyCheapestProposal.setReplyWith(proposalId);
-			replyCheapestProposal.setContent(cheapestProposal.getContent());
+			
+			JSONObject replyContent = new JSONObject();
+			replyContent.put("product", marketAgent.getAttribute().getConsumes());
+			replyContent.put("quantity", String.valueOf(quantityBuy));
+			replyContent.put("price",String.format(Locale.ENGLISH,"%.02f",cheapestSoFar));
+			
+			replyCheapestProposal.setContent(replyContent.toString());
 			marketAgent.send(replyCheapestProposal);
 
 			marketAgent.printMsg("For '" + proposalId
 					+ "', the cheapest price is : " + cheapestSoFar
-					+ " for quantity " + quantityForCheapest + " total is "
+					+ " for quantity " + quantityBuy + " total is "
 					+ cheapestSoFar * quantityForCheapest);
 			finishedProposals.add(proposalId);
 			long currentTimeStamp = System.currentTimeMillis();

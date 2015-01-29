@@ -9,6 +9,7 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 	private final double MINIMAL_PRICE = 0.50;
 	private final double MARGE = 0.50;
 	private final double SAFETY_MONEY = 10;
+	private final int MAX_STARVATION = 5;
 	
 	private long lastRun = 0;
 	public TraderLogicBehaviour(MarketAgent marketAgent) {
@@ -34,9 +35,10 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 		
 		double money = marketAgent.getAttribute().getMoney();
 		double satisfaction = marketAgent.getAttribute().getSatisfaction();
+		int hunger = marketAgent.getAttribute().getHungerCounter();
 		if(money > SAFETY_MONEY && satisfaction > 0.0){
 			raisePrice();
-		}else if(money <= SAFETY_MONEY && satisfaction <= 0.0){
+		}else if((money <= SAFETY_MONEY && satisfaction <= 0.0) || hunger > MAX_STARVATION){
 			dropPrice();
 		}
 		
@@ -45,7 +47,7 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 
 	private void dropPrice() {
 		double actual_price = marketAgent.getAttribute().getPrice();
-		double new_price  = floorPrice(actual_price - MARGE - generateRandomMarge());
+		double new_price  = floorPrice(actual_price - MARGE);
 		marketAgent.getAttribute().setPrice(new_price);
 	}
 	private void raisePrice() {
