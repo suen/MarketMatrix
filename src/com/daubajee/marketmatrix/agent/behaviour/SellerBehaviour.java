@@ -84,17 +84,14 @@ public class SellerBehaviour extends TickerBehaviour{
 		}
 		
 		String product = (String) contentjson.get("product");
-		int quantity = Integer.valueOf( (String) contentjson.get("quantity"));
 		
 		if (!product.equalsIgnoreCase(marketAgent.getAttribute().getProduces())) {
 			System.out.println("Demand received for unsupported product: " + product);
 			return;
 		}
 		
-		if (marketAgent.getAttribute().getProduceProductStock() < quantity){
-			System.out.println("Quantity unavailable: " + quantity );
-			return;
-		}
+		//we ignore the quantity ask by the buyer and tell him how much we have
+		int quantity = marketAgent.getAttribute().getProduceProductStock();
 		
 		ACLMessage reply = cfpMsg.createReply();
 		reply.setConversationId("for-buyer");
