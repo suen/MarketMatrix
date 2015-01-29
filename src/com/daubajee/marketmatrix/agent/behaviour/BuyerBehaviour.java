@@ -27,6 +27,9 @@ public class BuyerBehaviour extends TickerBehaviour {
 	private Map<String, List<ACLMessage>> proposalsReceived 
 							= new HashMap<String, List<ACLMessage>>();
 	
+	private Map<String, Long> confirmationTimeOuts = new HashMap<String, Long>();
+
+	
 	private LinkedList<ACLMessage> confirmations
 							= new LinkedList<ACLMessage>();
 	
@@ -49,9 +52,8 @@ public class BuyerBehaviour extends TickerBehaviour {
 
 		} else if (message.getPerformative()==ACLMessage.PROPOSE) {
 			proposeMsgQueue.add(message);
-			marketAgent.printMsg("Proposal received for : " + message.getReplyWith());
+			//marketAgent.printMsg("Proposal received for : " + message.getReplyWith());
 		} else if (message.getPerformative() == ACLMessage.CONFIRM) {
-			
 			marketAgent.printMsg("Confirmation received for : " + message.getReplyWith());
 			confirmations.add(message);
 		}
@@ -98,7 +100,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 		
 		proposalsReceived.put(proposalId, new ArrayList<ACLMessage>());
 		proposalTimeOuts.put(proposalId, currentTimeStamp);
-		marketAgent.printMsg("CFP for product '" + consumes + "' sent to " + otherAgentList.size()+ " agents");
+		marketAgent.printMsg("CFP "+proposalId + " for product '" + consumes + "' sent to " + otherAgentList.size()+ " agents");
 	}
 
 	private void sortProposeMsgQueue() {
@@ -106,10 +108,10 @@ public class BuyerBehaviour extends TickerBehaviour {
 			return;
 		
 		ACLMessage proposalMsg = proposeMsgQueue.pop();
-		
+		//If the message is a response for a CFP created by this buyer and not out of date then we add it to the list of proposal for the CFP
 		for (String proposalId : proposalsReceived.keySet()) {
 			if (!proposalMsg.getReplyWith().equals(proposalId)){
-				marketAgent.printMsg("A message with bad reply-to '" + proposalMsg.getReplyWith() + "' expected : '" +proposalId+ "'");
+				//marketAgent.printMsg("A message with bad reply-to '" + proposalMsg.getReplyWith() + "' expected : '" +proposalId+ "'");
 				continue;
 			}
 			proposalsReceived.get(proposalId).add(proposalMsg);
@@ -134,7 +136,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 
 			if (proposalList.size() == 0) {
 				//turns out nobody replied to our proposal
-				marketAgent.printMsg("No proposal received for : " + proposalId);
+				//marketAgent.printMsg("No proposal received for : " + proposalId);
 				finishedProposals.add(proposalId);
 				continue;
 			}
@@ -187,14 +189,14 @@ public class BuyerBehaviour extends TickerBehaviour {
 			} // end of iterator for Messages in a proposalId
 		
 			if (cheapestProposal==null){
-				//means the list contained only malformed proposals
-				marketAgent.printMsg("No proper proposal for: '" + proposalId + "'");
+				//means the list contained only malformed proposals or no proposal
+				//marketAgent.printMsg("No proper proposal for: '" + proposalId + "'");
 				finishedProposals.add(proposalId);
 				continue;
 			}
 			double buyerMoney =  marketAgent.getAttribute().getMoney();
 			if((cheapestSoFar*quantityForCheapest) > buyerMoney){
-				marketAgent.printMsg("Price is too high for me : '" + proposalId + "'");
+				marketAgent.printMsg("Price is too high for me : '" + proposalId + "' by " + cheapestProposal.getSender().getName());
 				continue;
 			}
 			ACLMessage replyCheapestProposal = cheapestProposal.createReply();
@@ -206,6 +208,8 @@ public class BuyerBehaviour extends TickerBehaviour {
 
 			marketAgent.printMsg("For '"+proposalId + "', the cheapest deal is : " + cheapestSoFar);
 			finishedProposals.add(proposalId);
+			long currentTimeStamp = System.currentTimeMillis();
+			confirmationTimeOuts.put(proposalId, currentTimeStamp);
 		}
 
 		//remove all the proposals from proposalTimeOuts
@@ -227,26 +231,40 @@ public class BuyerBehaviour extends TickerBehaviour {
 		
 		ACLMessage confirmationMsg = confirmations.pop();
 		
-		String content = confirmationMsg.getContent();
+		/*long currentTimeMillis = System.currentTimeMillis();
 		
-		JSONObject contentJson = new JSONObject(content);
-		
-		String product = (String) contentJson.get("product");
-		int quantity = Integer.parseInt((String)contentJson.get("quantity"));
-		double price = Double.parseDouble((String) contentJson.get("price"));
-		
-		MarketAgentAttribute agentAttributes = marketAgent.getAttribute();
-		
-		if (!agentAttributes.getConsumes().equals(product)){
-			// means we got the wrong ACCEPT message
-			marketAgent.printMsg("CONFIRM for wrong product received");
-			return;
-		}
-		
-		double priceTotal = price * quantity;
-		agentAttributes.cashOut(priceTotal);
-		agentAttributes.consumeProductIn(quantity);
-		
+		List<String> finishedConfirmations = new ArrayList<String>();
+		for(String confirmationId: confirmationTimeOuts.keySet()){
+			Long confirmationTime = confirmationTimeOuts.get(confirmationId);
+			//if (TIME_UNIT*4) has not passed, we wait
+			if ( (currentTimeMillis - confirmationTime) < (MarketAgent.TIME_UNIT * 4))
+				continue;
+			*/
+			String content = confirmationMsg.getContent();
+			
+			JSONObject contentJson = new JSONObject(content);
+			
+			String product = (String) contentJson.get("product");
+			int quantity = Integer.parseInt((String)contentJson.get("quantity"));
+			double price = Double.parseDouble((String) contentJson.get("price"));
+			/*
+			if(!confirmationMsg.getReplyWith().equals(confirmationId)){
+				confirmationTimeOuts.remove(confirmationId);
+				continue;
+			}else{*/
+				MarketAgentAttribute agentAttributes = marketAgent.getAttribute();
+				
+				if (!agentAttributes.getConsumes().equals(product)){
+					// means we got the wrong ACCEPT message
+					marketAgent.printMsg("CONFIRM for wrong product received");
+					return;
+				}
+				
+				double priceTotal = price * quantity;
+				agentAttributes.cashOut(priceTotal);
+				agentAttributes.consumeProductIn(quantity);
+			//}
+		//}
 	}
 
 
