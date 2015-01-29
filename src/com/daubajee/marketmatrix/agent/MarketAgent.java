@@ -90,7 +90,7 @@ public class MarketAgent extends Agent {
 		});
 */
 		//a gui notification on successful initialisation
-		gui.addMsg("Agent: '" + this.getLocalName() + "' intialised successfully");
+		//gui.addMsg(this,"Agent: '" + this.getLocalName() + "' intialised successfully");
 	}
 
 	private boolean parseParameters(){
@@ -151,7 +151,7 @@ public class MarketAgent extends Agent {
 	}
 	
 	public void printMsg(String msg){
-		gui.addMsg("[" + this.getLocalName() + "] " + msg);
+		gui.addMsg(this, "[" + this.getLocalName() + "] " + msg);
 	}
 	
 	public void updateAgentGUI(){

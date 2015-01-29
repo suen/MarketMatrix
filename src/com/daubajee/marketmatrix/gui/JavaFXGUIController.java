@@ -10,9 +10,9 @@ import com.daubajee.marketmatrix.agent.MarketAgentCreator;
 
 public class JavaFXGUIController {
 
-	private Container container;
+	private NewContainer container;
 		
-	private Map<MarketAgent, AgentGUI> registeredAgents = new HashMap<MarketAgent, AgentGUI>();
+	private Map<MarketAgent, NewAgentGUI> registeredAgents = new HashMap<MarketAgent, NewAgentGUI>();
 	
 	private static JavaFXGUIController self = null;
 	
@@ -23,10 +23,10 @@ public class JavaFXGUIController {
 	}
 	
 	private JavaFXGUIController(){
-		container = new Container();
+		container = new NewContainer();
 	}
 	
-	public Container getRootNode(){
+	public NewContainer getRootNode(){
 		return container;
 	}
 	
@@ -35,7 +35,7 @@ public class JavaFXGUIController {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				AgentGUI agui = new AgentGUI(agent.getLocalName());
+				NewAgentGUI agui = new NewAgentGUI(agent.getLocalName());
 				int aindex = container.addAgentGUI(agui);
 				agui.setIndexInContainer(aindex);
 				agui.setAgentAttribute(agent.getAttribute());
@@ -49,7 +49,7 @@ public class JavaFXGUIController {
 	}
 	
 	public void updateAgents(MarketAgent agent){
-		final AgentGUI agui = registeredAgents.get(agent);
+		final NewAgentGUI agui = registeredAgents.get(agent);
 		Platform.runLater(new Runnable() {
 			
 			@Override
@@ -59,12 +59,19 @@ public class JavaFXGUIController {
 		});
 	}
 	
-	public void addMsg(final String msg){
+	public void addMsg(MarketAgent agent, final String msg){
+		final NewAgentGUI agui = registeredAgents.get(agent);
+		
+		if (agui==null){
+			System.err.println("Message NOT PRINTED: " + msg );
+			return;
+		}
+		
 		Platform.runLater(new Runnable() {
 			
 			@Override
 			public void run() {
-				container.addMsg(msg);
+				container.addMsg(agui, msg);
 			}
 		});
 	}
