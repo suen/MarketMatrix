@@ -13,7 +13,6 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 	private long lastRun = 0;
 	public TraderLogicBehaviour(MarketAgent marketAgent) {
 		super(marketAgent, 1000);
-		marketAgent.printMsg(getClass().getSimpleName() + " initialised");
 		this.marketAgent = marketAgent;
 		lastRun = System.currentTimeMillis();
 	}

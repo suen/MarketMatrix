@@ -12,7 +12,6 @@ public class SatisfactionCheckBehaviour extends TickerBehaviour {
 	public SatisfactionCheckBehaviour(MarketAgent marketAgent) {
 		super(marketAgent, 1000);
 		this.marketAgent = marketAgent;
-		marketAgent.printMsg(getClass().getSimpleName() + " initialised");
 		lastRun = System.currentTimeMillis();
 	}
 
