@@ -49,10 +49,10 @@ public class SellerBehaviour extends TickerBehaviour{
 			//marketAgent.printMsg("Message received for CFP");
 			cfpMsgQueue.add(message);
 		} else if (message.getPerformative()==ACLMessage.ACCEPT_PROPOSAL) {
-			marketAgent.printMsg("received ACCEPT_PROPOSAL by " + message.getSender().getName());
+			marketAgent.printMsg("received ACCEPT_PROPOSAL for "+message.getReplyWith() +" by " + message.getSender().getLocalName());
 			acceptMsgQueue.add(message);
 		} else if (message.getPerformative() == ACLMessage.CONFIRM) {
-			marketAgent.printMsg("receveid CONFIRM by" + message.getSender().getName());
+			marketAgent.printMsg("receveid CONFIRM for "+message.getReplyWith() +" by" + message.getSender().getLocalName());
 		} else {
 			System.out.println("Message!!");
 		}

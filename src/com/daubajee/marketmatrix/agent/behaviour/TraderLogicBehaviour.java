@@ -8,6 +8,7 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 	private MarketAgent marketAgent;
 	private final double MINIMAL_PRICE = 0.50;
 	private final double MARGE = 0.50;
+	private final double SAFETY_MONEY = 10;
 	
 	private long lastRun = 0;
 	public TraderLogicBehaviour(MarketAgent marketAgent) {
@@ -33,9 +34,9 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 		
 		double money = marketAgent.getAttribute().getMoney();
 		double satisfaction = marketAgent.getAttribute().getSatisfaction();
-		if(money > 0 && satisfaction > 0.0){
+		if(money > SAFETY_MONEY && satisfaction > 0.0){
 			raisePrice();
-		}else if(money <= 0 && satisfaction <= 0.0){
+		}else if(money <= SAFETY_MONEY && satisfaction <= 0.0){
 			dropPrice();
 		}
 		
