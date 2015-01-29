@@ -196,7 +196,8 @@ public class BuyerBehaviour extends TickerBehaviour {
 			}
 			double buyerMoney =  marketAgent.getAttribute().getMoney();
 			if((cheapestSoFar*quantityForCheapest) > buyerMoney){
-				marketAgent.printMsg("Price is too high for me : '" + proposalId + "' by " + cheapestProposal.getSender().getName());
+				marketAgent.printMsg("Price is too high for me : '" + proposalId + "' by " + cheapestProposal.getSender().getLocalName());
+				finishedProposals.add(proposalId);
 				continue;
 			}
 			ACLMessage replyCheapestProposal = cheapestProposal.createReply();
