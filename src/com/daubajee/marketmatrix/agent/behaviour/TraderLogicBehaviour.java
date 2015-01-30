@@ -6,10 +6,7 @@ import com.daubajee.marketmatrix.agent.MarketAgent;
 
 public class TraderLogicBehaviour extends TickerBehaviour {
 	private MarketAgent marketAgent;
-	private final double MINIMAL_PRICE = 0.50;
-	private final double MARGE = 0.50;
-	private final double SAFETY_MONEY = 10;
-	private final int MAX_STARVATION = 5;
+
 	
 	private long lastRun = 0;
 	public TraderLogicBehaviour(MarketAgent marketAgent) {
@@ -35,9 +32,9 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 		double money = marketAgent.getAttribute().getMoney();
 		double satisfaction = marketAgent.getAttribute().getSatisfaction();
 		int hunger = marketAgent.getAttribute().getHungerCounter();
-		if(money > SAFETY_MONEY && satisfaction > 0.0){
+		if(money > MarketAgent.SAFETY_MONEY && satisfaction > 0.0){
 			raisePrice();
-		}else if((money <= SAFETY_MONEY && satisfaction <= 0.0) || hunger > MAX_STARVATION){
+		}else if((money <= MarketAgent.SAFETY_MONEY && satisfaction <= 0.0) || hunger > MarketAgent.MAX_STARVATION){
 			dropPrice();
 		}
 		
@@ -46,24 +43,24 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 
 	private void dropPrice() {
 		double actual_price = marketAgent.getAttribute().getPrice();
-		double new_price  = floorPrice(actual_price - MARGE);
+		double new_price  = floorPrice(actual_price - MarketAgent.MARGE);
 		marketAgent.getAttribute().setPrice(new_price);
 	}
 	private void raisePrice() {
 		double actual_price = marketAgent.getAttribute().getPrice();
-		double new_price  = floorPrice(actual_price+MARGE + generateRandomMarge());
+		double new_price  = floorPrice(actual_price+MarketAgent.MARGE + generateRandomMarge());
 		marketAgent.getAttribute().setPrice(new_price);
 		//System.out.println("prix after update " + marketAgent.getAttribute().getPrice());
 	}
 	private double floorPrice(double new_price){
-		if(new_price < MINIMAL_PRICE){
-			return MINIMAL_PRICE;
+		if(new_price < MarketAgent.MINIMAL_PRICE){
+			return MarketAgent.MINIMAL_PRICE;
 		}else{
 			return new_price;
 		}
 	}
 	private double generateRandomMarge(){
-		return Math.random() % MARGE;
+		return Math.random() % MarketAgent.MARGE;
 	}
 
 	@Override

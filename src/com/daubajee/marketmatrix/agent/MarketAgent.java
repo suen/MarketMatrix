@@ -28,6 +28,12 @@ public class MarketAgent extends Agent {
 	private MarketAgentAttribute attribute = new MarketAgentAttribute();
 	private JavaFXGUIController gui;
 	public static long TIME_UNIT = 5000L;
+	
+	public static final double MINIMAL_PRICE = 0.50;
+	public static final double MARGE = 0.50;
+	public static final double SAFETY_MONEY = 10;
+	public static final int MAX_STARVATION = 5;
+	
 	public static boolean PAUSE = false;
 	
 	private List<AID> otherAgents = new ArrayList<AID>();
