@@ -7,7 +7,6 @@ import jade.core.behaviours.Behaviour;
 public class PostManBehaviour extends Behaviour {
 
 	public PostManBehaviour(MarketAgent marketAgent) {
-		marketAgent.printMsg(getClass().getSimpleName() + " initialised");
 	}
 
 	@Override
