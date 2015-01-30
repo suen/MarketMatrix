@@ -222,6 +222,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 						+ proposalId + "' by "
 						+ cheapestProposal.getSender().getLocalName());
 				finishedProposals.add(proposalId);
+				sendRejects(proposalList, cheapestProposal);
 				continue;
 			}
 			ACLMessage replyCheapestProposal = cheapestProposal.createReply();
@@ -242,6 +243,8 @@ public class BuyerBehaviour extends TickerBehaviour {
 					+ " for quantity " + quantityBuy + " total is "
 					+ cheapestSoFar * quantityForCheapest);
 			finishedProposals.add(proposalId);
+			sendRejects(proposalList, cheapestProposal);
+			
 			long currentTimeStamp = System.currentTimeMillis();
 			confirmationTimeOuts.put(proposalId, currentTimeStamp);
 		}
@@ -255,6 +258,17 @@ public class BuyerBehaviour extends TickerBehaviour {
 			}
 		}
 
+	}
+	
+	private void sendRejects(List<ACLMessage> proposalList, ACLMessage accepted){
+		for(ACLMessage message: proposalList){
+			if (message==accepted)
+				continue;
+			ACLMessage rejectReply = message.createReply();
+			rejectReply.setPerformative(ACLMessage.REJECT_PROPOSAL);
+			rejectReply.setConversationId("for-seller");
+			marketAgent.send(rejectReply);
+		}
 	}
 
 	private void treatConfirmations() {

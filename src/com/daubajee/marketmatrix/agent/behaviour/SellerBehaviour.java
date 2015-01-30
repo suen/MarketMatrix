@@ -51,8 +51,10 @@ public class SellerBehaviour extends TickerBehaviour{
 		} else if (message.getPerformative()==ACLMessage.ACCEPT_PROPOSAL) {
 			marketAgent.printMsg("received ACCEPT_PROPOSAL for "+message.getReplyWith() +" by " + message.getSender().getLocalName());
 			acceptMsgQueue.add(message);
+		} else if (message.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
+			marketAgent.printMsg("received REJECT for "+message.getReplyWith() +" by " + message.getSender().getLocalName());
 		} else if (message.getPerformative() == ACLMessage.CONFIRM) {
-			marketAgent.printMsg("receveid CONFIRM for "+message.getReplyWith() +" by" + message.getSender().getLocalName());
+			marketAgent.printMsg("received CONFIRM for "+message.getReplyWith() +" by " + message.getSender().getLocalName());
 		} else {
 			System.out.println("Message!!");
 		}
