@@ -26,8 +26,6 @@ public class BuyerBehaviour extends TickerBehaviour {
 
 	private Map<String, List<ACLMessage>> proposalsReceived = new HashMap<String, List<ACLMessage>>();
 
-	private Map<String, Long> confirmationTimeOuts = new HashMap<String, Long>();
-
 	private LinkedList<ACLMessage> confirmations = new LinkedList<ACLMessage>();
 
 	private Map<String, Long> proposalTimeOuts = new HashMap<String, Long>();
@@ -69,7 +67,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 	}
 
 	private void initCFPMsg() {
-
+		//so we can only handle on CFP by agent in the same time
 		if (proposalsReceived.size() != 0)
 			return;
 		
@@ -95,6 +93,7 @@ public class BuyerBehaviour extends TickerBehaviour {
 		String consumes = marketAgent.getAttribute().getConsumes();
 		JSONObject msgContent = new JSONObject();
 		msgContent.put("product", consumes);
+		//we send 5 by default to communicate with other program but in our implementation the seller answer with all he had
 		msgContent.put("quantity", "5");
 		msgContent.put("proposal-id", proposalId);
 
@@ -213,10 +212,14 @@ public class BuyerBehaviour extends TickerBehaviour {
 			}
 
 			double buyerMoney = marketAgent.getAttribute().getMoney();
+			int quantityMax= marketAgent.getAttribute().getConsumeProductStockCapacity();
+			int currentQuantity = marketAgent.getAttribute().getConsumeProductStock();
+			//get max quantity we can pay for
 			Double tmpValueTransaction = (buyerMoney/cheapestSoFar);
 			tmpValueTransaction = (tmpValueTransaction > quantityForCheapest) ? tmpValueTransaction%quantityForCheapest : tmpValueTransaction; 
+			//get max quantity we can stock
 			int quantityBuy = tmpValueTransaction.intValue();
-			System.out.println("quantity buy ="+quantityBuy);
+			quantityBuy = quantityBuy %(quantityMax - currentQuantity +1); 
 			if (quantityBuy <= 0) {
 				marketAgent.printMsg("Price is too high for me : '"
 						+ proposalId + "' by "
@@ -244,9 +247,6 @@ public class BuyerBehaviour extends TickerBehaviour {
 					+ cheapestSoFar * quantityForCheapest);
 			finishedProposals.add(proposalId);
 			sendRejects(proposalList, cheapestProposal);
-			
-			long currentTimeStamp = System.currentTimeMillis();
-			confirmationTimeOuts.put(proposalId, currentTimeStamp);
 		}
 
 		// remove all the proposals from proposalTimeOuts

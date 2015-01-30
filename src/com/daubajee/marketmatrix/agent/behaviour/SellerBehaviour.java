@@ -31,8 +31,6 @@ public class SellerBehaviour extends TickerBehaviour{
 		this.marketAgent = marketAgent;
 		lastrun = System.currentTimeMillis();
 	}
-
-	int count = 0;
 	
 	public void agentAction() {
 		
@@ -43,7 +41,7 @@ public class SellerBehaviour extends TickerBehaviour{
 		ACLMessage message = marketAgent.receive(msgTemp);
 		
 		if (message == null) {
-//			 System.out.println("No message on seller " + count++);
+			 //do nothing
 		}
 		else if (message.getPerformative()==ACLMessage.CFP) {
 			//marketAgent.printMsg("Message received for CFP");
@@ -62,9 +60,7 @@ public class SellerBehaviour extends TickerBehaviour{
 		treatcfpMsg();
 		
 		treatAcceptProposal();
-		
-		//TODO make call for proposal based on satisfaction level
-		
+				
 		block();
 	}
 	
@@ -110,7 +106,7 @@ public class SellerBehaviour extends TickerBehaviour{
 		
 		cfpReplied.put(reply, quantity);
 	}
-	
+	//we didn't check if the agent previously send a CFP and answer every ACCEPT_PROPOSAL we get if we can
 	private void treatAcceptProposal() {
 		if (acceptMsgQueue.size()==0)
 			return;

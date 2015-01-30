@@ -81,22 +81,6 @@ public class MarketAgent extends Agent {
 		// behaviour that deals with buying of products
 		addBehaviour(new BuyerBehaviour(this));
 
-		
-/*		addBehaviour(new TickerBehaviour(this, 1000) {
-			@Override
-			protected void onTick() {
-				MarketAgent marketAgent = (MarketAgent) myAgent;
-				MarketAgentAttribute attr = marketAgent.getAttribute();
-				int sat = attr.getSatisfaction() - 1;
-				attr.setSatisfaction(sat);
-				//System.out.println(sat);
-				gui.updateAgents(marketAgent);
-				//gui.addMsg(marketAgent.getLocalName() + " satisfaction: " + String.valueOf(sat));
-			}
-		});
-*/
-		//a gui notification on successful initialisation
-		//gui.addMsg(this,"Agent: '" + this.getLocalName() + "' intialised successfully");
 	}
 
 	private boolean parseParameters(){

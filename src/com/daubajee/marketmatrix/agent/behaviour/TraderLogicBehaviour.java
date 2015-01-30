@@ -3,7 +3,10 @@ package com.daubajee.marketmatrix.agent.behaviour;
 import jade.core.behaviours.TickerBehaviour;
 
 import com.daubajee.marketmatrix.agent.MarketAgent;
-
+/**
+ * Contain all the logic behind the price raise and drop
+ *
+ */
 public class TraderLogicBehaviour extends TickerBehaviour {
 	private MarketAgent marketAgent;
 
@@ -38,7 +41,7 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 			dropPrice();
 		}
 		
-		block(4000);
+		block();
 	}
 
 	private void dropPrice() {
@@ -46,11 +49,11 @@ public class TraderLogicBehaviour extends TickerBehaviour {
 		double new_price  = floorPrice(actual_price - MarketAgent.MARGE);
 		marketAgent.getAttribute().setPrice(new_price);
 	}
+	// raise increase are faster than drop, to be more realistic
 	private void raisePrice() {
 		double actual_price = marketAgent.getAttribute().getPrice();
 		double new_price  = floorPrice(actual_price+MarketAgent.MARGE + generateRandomMarge());
 		marketAgent.getAttribute().setPrice(new_price);
-		//System.out.println("prix after update " + marketAgent.getAttribute().getPrice());
 	}
 	private double floorPrice(double new_price){
 		if(new_price < MarketAgent.MINIMAL_PRICE){
