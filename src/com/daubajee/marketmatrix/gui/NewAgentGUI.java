@@ -4,6 +4,7 @@ import java.io.File;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -17,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import com.daubajee.marketmatrix.agent.MarketAgent;
 import com.daubajee.marketmatrix.agent.MarketAgentAttribute;
 import com.sun.javafx.scene.control.skin.ProgressIndicatorSkin;
 
@@ -60,17 +62,35 @@ public class NewAgentGUI extends VBox {
 	private String price = "3";	
 	
 	private ImageView avatar = new ImageView();
-	ProgressBar satisfIndicator = new ProgressBar();
 
+	private ProgressBar satisfIndicator = new ProgressBar();
+	private Label satisfactionLabel = new Label("Satisfaction");
+
+	private ProgressBar hungerIndicator = new ProgressBar();
+	private Label hungerLabel = new Label("Hunger");
+
+	private static int agentCounter = 1;
 	
 	public NewAgentGUI(String name) {
 		agentNameLabel.setText(name);
 		initLayout();
 		initStyle();
+		agentCounter++;
 	}
 	
 	private void initLayout() {
-		getChildren().addAll(satisfIndicator, rootContainer);
+		
+		HBox hb = new HBox();
+		hb.setSpacing(20);
+		hb.setPadding(new Insets(10, 0, 0, 10));
+		hb.getChildren().addAll(satisfactionLabel, satisfIndicator);
+
+		HBox hb2 = new HBox();
+		hb2.setSpacing(20);
+		hb2.setPadding(new Insets(10, 0, 0, 10));
+		hb2.getChildren().addAll(hungerLabel, hungerIndicator);
+		
+		getChildren().addAll(hb, hb2, rootContainer);
 		
 		rootContainer.getChildren().addAll(leftContainer, rightContainer);
 
@@ -92,8 +112,9 @@ public class NewAgentGUI extends VBox {
 		sp.setContent(messageBoard);
 		
 		satisfIndicator.setProgress(1);
+		hungerIndicator.setProgress(0);
 		
-		File imgFile = new File("img/farmer.png");
+		File imgFile = new File("img/farmer"+String.valueOf(agentCounter)+".jpeg");
 		Image img = new Image(imgFile.toURI().toString());
 		avatar.setFitWidth(100);
 		avatar.setPreserveRatio(true);
@@ -103,7 +124,14 @@ public class NewAgentGUI extends VBox {
 	private void initStyle(){
 		setStyle("-fx-border-width: 2px;"
 				+ "-fx-border-color: #dfdfdf;"
-				+ "-fx-max-width: 550px;");
+				+ "-fx-max-width: 550px;"
+				+ "-fx-background-color: #ffffff;");
+		
+		satisfactionLabel.setStyle("-fx-min-width: 100px;");
+		hungerLabel.setStyle("-fx-min-width: 100px;");
+	
+		hungerIndicator.setStyle("-fx-min-width: 380px;");
+		satisfIndicator.setStyle("-fx-min-width: 380px;");
 		
 		agentNameLabel.setTextAlignment(TextAlignment.CENTER);
 		agentNameLabel.setStyle("-fx-font-size: 1.6em;"
@@ -113,7 +141,8 @@ public class NewAgentGUI extends VBox {
 				
 		leftContainer.setAlignment(Pos.CENTER);
 		leftContainer.setStyle("-fx-padding: 10px 10px 0px 10px;"
-				+ "-fx-max-width: 150px;");
+				+ "-fx-max-width: 150px;"
+				+ "-fx-spacing: 10px;");
 		
 		rightContainer.setStyle("-fx-spacing: 10px;"
 				+ "-fx-padding: 5px;");
@@ -130,8 +159,7 @@ public class NewAgentGUI extends VBox {
 		pStockField.setStyle(vFieldStyle);
 		priceField.setStyle(vFieldStyle);
 		moneyField.setStyle(vFieldStyle);
-		
-		satisfIndicator.setStyle("-fx-progress-color: rgb(137,137,137); -fx-min-width: 500px;");
+
 		
 		
 		msgBoardContainer.setStyle("-fx-border-width: 1px;"
@@ -179,6 +207,17 @@ public class NewAgentGUI extends VBox {
 		produceStockMaximum = String.valueOf(attr.getProduceProductStockCapacity());
 		money = String.format("%.02f", attr.getMoney());
 		satisfaction = attr.getSatisfaction();
+		
+		int hungerCounter = attr.getHungerCounter();
+		if (hungerCounter > 0){
+			int max = MarketAgent.MAX_STARVATION;
+
+			if (hungerCounter > max)
+				hungerCounter = max;
+			hungerIndicator.setProgress((float)hungerCounter/(float)max);
+		}else {
+			hungerIndicator.setProgress(0);
+		}
 		
 		consumesLabel.setText("Consumes " + consumes + " at " + consumesRate+ "/TU");
 		consumeStockLabel.setText(consumes + " :");
