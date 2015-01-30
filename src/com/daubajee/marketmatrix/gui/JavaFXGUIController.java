@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.application.Platform;
+import javafx.scene.layout.Pane;
 
 import com.daubajee.marketmatrix.agent.MarketAgent;
 import com.daubajee.marketmatrix.agent.MarketAgentCreator;
 
 public class JavaFXGUIController {
 
-	private NewContainer container;
+	private NewContainer container= new NewContainer();
 		
 	private Map<MarketAgent, NewAgentGUI> registeredAgents = new HashMap<MarketAgent, NewAgentGUI>();
 	
@@ -23,10 +24,9 @@ public class JavaFXGUIController {
 	}
 	
 	private JavaFXGUIController(){
-		container = new NewContainer();
 	}
 	
-	public NewContainer getRootNode(){
+	public Pane getRootNode(){
 		return container;
 	}
 	
