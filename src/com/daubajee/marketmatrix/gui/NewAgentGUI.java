@@ -113,8 +113,8 @@ public class NewAgentGUI extends VBox {
 		
 		satisfIndicator.setProgress(1);
 		hungerIndicator.setProgress(0);
-		
-		File imgFile = new File("img/farmer"+String.valueOf(agentCounter)+".jpeg");
+		int idImage = agentCounter%13 + 1;
+		File imgFile = new File("img/farmer"+String.valueOf(idImage)+".jpeg");
 		Image img = new Image(imgFile.toURI().toString());
 		avatar.setFitWidth(100);
 		avatar.setPreserveRatio(true);

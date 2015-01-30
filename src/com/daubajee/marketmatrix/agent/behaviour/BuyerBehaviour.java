@@ -72,6 +72,13 @@ public class BuyerBehaviour extends TickerBehaviour {
 
 		if (proposalsReceived.size() != 0)
 			return;
+		
+		double consumeByTimeUnit = marketAgent.getAttribute().getConsumeRate();
+		double productStock = marketAgent.getAttribute().getConsumeProductStock();
+		//if we have plenty of food to endure 3 turn we didn't launch a CFP
+		if (productStock > (consumeByTimeUnit * 3.0) ){
+			return;
+		}
 
 		List<AID> otherAgentList = marketAgent.getOtherAgentList();
 		if (otherAgentList.size() == 0)
