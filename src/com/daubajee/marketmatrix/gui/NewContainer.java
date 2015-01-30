@@ -80,7 +80,7 @@ public class NewContainer extends BorderPane	{
 				separator,
 				produceLabel, producesBox, produceRateLabel, produceRateField,
 				separator2, createBtn,
-				separator3, pulseLabel, pulseField, pulseSet, 
+				separator3, pulseLabel, pulseField, new Label("ms"), pulseSet, 
 				pulsePlayPause
 				);
 		pulseField.setText(String.valueOf(MarketAgent.TIME_UNIT));
@@ -90,8 +90,8 @@ public class NewContainer extends BorderPane	{
 		producesBox.setItems(list);
 		list.addAll("Apple", "Banna", "Orange", "Rice", "Wheat", "Corn", "Barley");
 		
-		for(int i=0; i<5; i++){
-			//agentContainer.getChildren().add(new NewAgentGUI(String.valueOf(i)));
+		for(int i=0; i<13; i++){
+		//	agentContainer.getChildren().add(new NewAgentGUI(String.valueOf(i)));
 		}
 	}
 	
